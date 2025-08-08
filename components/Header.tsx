@@ -1,12 +1,27 @@
 'use client'
 
 import React from 'react'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { Menu, X, ShoppingBag, User, Search } from 'lucide-react'
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [cartCount, setCartCount] = useState(0)
+
+  useEffect(() => {
+    try {
+      const stored = localStorage.getItem('cart')
+      if (stored) setCartCount(JSON.parse(stored).reduce((sum: number, i: any) => sum + (i.quantity || 1), 0))
+      const handler = () => {
+        const s = localStorage.getItem('cart')
+        if (s) setCartCount(JSON.parse(s).reduce((sum: number, i: any) => sum + (i.quantity || 1), 0))
+        else setCartCount(0)
+      }
+      window.addEventListener('cart:update', handler)
+      return () => window.removeEventListener('cart:update', handler)
+    } catch {}
+  }, [])
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-black/90 backdrop-blur-md border-b border-white/10">
@@ -35,8 +50,11 @@ export default function Header() {
             <Link href="/account" className="p-2 text-white/80 hover:text-white transition-colors duration-300">
               <User size={20} />
             </Link>
-            <Link href="/checkout" className="p-2 text-white/80 hover:text-white transition-colors duration-300">
+            <Link href="/checkout" className="relative p-2 text-white/80 hover:text-white transition-colors duration-300">
               <ShoppingBag size={20} />
+              {cartCount > 0 && (
+                <span className="absolute -top-1 -right-1 text-[10px] px-1.5 py-0.5 bg-white text-black rounded-full">{cartCount}</span>
+              )}
             </Link>
           </div>
 
@@ -57,18 +75,8 @@ export default function Header() {
               <Link href="/collection" className="text-white/90 hover:text-white transition-colors">Collection</Link>
               <Link href="/about" className="text-white/90 hover:text-white transition-colors">About</Link>
               <Link href="/waitlist" className="text-white/90 hover:text-white transition-colors">Waitlist</Link>
+              <Link href="/checkout" className="text-white/90 hover:text-white transition-colors">Cart ({cartCount})</Link>
             </nav>
-            <div className="flex items-center justify-center space-x-4 mt-6">
-              <Link href="/search" className="p-2 text-white/80 hover:text-white transition-colors duration-300">
-                <Search size={20} />
-              </Link>
-              <Link href="/account" className="p-2 text-white/80 hover:text-white transition-colors duration-300">
-                <User size={20} />
-              </Link>
-              <Link href="/checkout" className="p-2 text-white/80 hover:text-white transition-colors duration-300">
-                <ShoppingBag size={20} />
-              </Link>
-            </div>
           </div>
         )}
       </div>

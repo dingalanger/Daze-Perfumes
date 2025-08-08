@@ -1,16 +1,24 @@
 'use client'
 
-import Link from 'next/link'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 
+function getCart() {
+  if (typeof window === 'undefined') return [] as any[]
+  try { return JSON.parse(localStorage.getItem('cart') || '[]') } catch { return [] }
+}
+
 export default function CheckoutPage() {
-  const handlePayNow = async () => {
-    const res = await fetch('/api/checkout/session', { method: 'POST' })
-    if (!res.ok) return // optionally show error
+  const handleCheckout = async () => {
+    const items = getCart()
+    const res = await fetch('/api/checkout/session', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ items }) })
+    if (!res.ok) return
     const { url } = await res.json()
     if (url) window.location.href = url
   }
+
+  const items = getCart()
+  const subtotal = items.reduce((s: number, i: any) => s + i.price * (i.quantity || 1), 0)
 
   return (
     <main className="min-h-screen pt-20 bg-daze-silk">
@@ -19,44 +27,24 @@ export default function CheckoutPage() {
       <section className="section-padding">
         <div className="container-custom">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
-            {/* Payment / Shipping Form */}
+            {/* Cart summary (main) */}
             <div className="lg:col-span-2 bg-white p-8 border border-daze-cream rounded-lg">
-              <h1 className="text-3xl font-serif font-bold text-daze-charcoal mb-6">Checkout</h1>
-
-              <form className="space-y-8" onSubmit={(e) => e.preventDefault()}>
-                {/* Contact */}
-                <div>
-                  <h2 className="text-lg font-semibold mb-4">Contact</h2>
-                  <input type="email" placeholder="Email" className="w-full border border-daze-cream p-3 focus:outline-none focus:border-daze-gold" />
+              <h1 className="text-3xl font-serif font-bold text-daze-charcoal mb-6">Your Cart</h1>
+              {items.length === 0 ? (
+                <p className="text-daze-charcoal/70">Your cart is empty. Add items from the collection.</p>
+              ) : (
+                <div className="space-y-4">
+                  {items.map((item: any) => (
+                    <div key={item.id} className="flex items-center justify-between border-b border-daze-cream pb-4">
+                      <div>
+                        <p className="font-medium text-daze-charcoal">{item.name}</p>
+                        <p className="text-sm text-daze-charcoal/70">Qty {item.quantity || 1}</p>
+                      </div>
+                      <span className="font-medium text-daze-charcoal">${(item.price * (item.quantity || 1)).toFixed(2)}</span>
+                    </div>
+                  ))}
                 </div>
-
-                {/* Shipping */}
-                <div>
-                  <h2 className="text-lg font-semibold mb-4">Shipping address</h2>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <input placeholder="First name" className="border border-daze-cream p-3 focus:outline-none focus:border-daze-gold" />
-                    <input placeholder="Last name" className="border border-daze-cream p-3 focus:outline-none focus:border-daze-gold" />
-                    <input placeholder="Address" className="md:col-span-2 border border-daze-cream p-3 focus:outline-none focus:border-daze-gold" />
-                    <input placeholder="City" className="border border-daze-cream p-3 focus:outline-none focus:border-daze-gold" />
-                    <input placeholder="Postal code" className="border border-daze-cream p-3 focus:outline-none focus:border-daze-gold" />
-                    <input placeholder="Country" className="border border-daze-cream p-3 focus:outline-none focus:border-daze-gold" />
-                  </div>
-                </div>
-
-                {/* Payment */}
-                <div>
-                  <h2 className="text-lg font-semibold mb-4">Payment</h2>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <input placeholder="Cardholder name" className="border border-daze-cream p-3 focus:outline-none focus:border-daze-gold" />
-                    <input placeholder="Card number" className="border border-daze-cream p-3 focus:outline-none focus:border-daze-gold" />
-                    <input placeholder="MM/YY" className="border border-daze-cream p-3 focus:outline-none focus:border-daze-gold" />
-                    <input placeholder="CVC" className="border border-daze-cream p-3 focus:outline-none focus:border-daze-gold" />
-                  </div>
-                </div>
-
-                <button type="button" onClick={handlePayNow} className="btn-primary w-full">Pay now</button>
-                <p className="text-xs text-daze-charcoal/60">This is a demo checkout UI. Connect Stripe for live payments.</p>
-              </form>
+              )}
             </div>
 
             {/* Order Summary */}
@@ -64,21 +52,20 @@ export default function CheckoutPage() {
               <h2 className="text-lg font-semibold mb-4">Order summary</h2>
               <div className="space-y-4">
                 <div className="flex justify-between text-sm">
-                  <span>Golden Orchid (50ml)</span>
-                  <span>$120</span>
+                  <span>Subtotal</span>
+                  <span>${subtotal.toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between text-sm">
                   <span>Shipping</span>
-                  <span>$0</span>
+                  <span>$0.00</span>
                 </div>
                 <div className="border-t border-daze-cream pt-4 flex justify-between font-semibold">
                   <span>Total</span>
-                  <span>$120</span>
+                  <span>${subtotal.toFixed(2)}</span>
                 </div>
               </div>
-              <div className="mt-6 text-sm text-daze-charcoal/70">
-                <p>Have questions? <Link href="/waitlist" className="underline">Join the waitlist</Link> and we’ll notify you about releases.</p>
-              </div>
+              <button type="button" onClick={handleCheckout} className="btn-primary w-full mt-6">Check out</button>
+              <p className="text-xs text-daze-charcoal/60 mt-2">Payments handled by Stripe. You’ll enter your information on the secure Stripe page.</p>
             </aside>
           </div>
         </div>

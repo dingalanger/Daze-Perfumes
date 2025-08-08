@@ -5,11 +5,21 @@ import Link from 'next/link'
 import { Heart, ShoppingBag, Crown, Sparkles } from 'lucide-react'
 
 const featuredProducts = [
-  { id: 1, name: 'Pear', description: 'Juicy Asian pear with a crisp, cool sparkle and soft musk.', price: 120, image: '/api/placeholder/400/500', category: 'Signature' },
-  { id: 2, name: 'Boba Tea', description: 'Milky black tea with brown sugar pearls and vanilla cream.', price: 120, image: '/api/placeholder/400/500', category: 'Signature' },
-  { id: 3, name: 'Steamed Rice', description: 'Warm steamed jasmine rice with a soft, comforting aura.', price: 120, image: '/api/placeholder/400/500', category: 'Signature' },
-  { id: 4, name: 'Stallion', description: 'Year of the Horse limited edition. Dark leather, osmanthus, and amber.', price: 120, image: '/api/placeholder/400/500', category: 'Zodiac' },
+  { id: 'pear', name: 'Pear', description: 'Juicy Asian pear with a crisp, cool sparkle and soft musk.', price: 120, image: '/api/placeholder/400/500', category: 'Signature' },
+  { id: 'boba', name: 'Boba Tea', description: 'Milky black tea with brown sugar pearls and vanilla cream.', price: 120, image: '/api/placeholder/400/500', category: 'Signature' },
+  { id: 'rice', name: 'Steamed Rice', description: 'Warm steamed jasmine rice with a soft, comforting aura.', price: 120, image: '/api/placeholder/400/500', category: 'Signature' },
+  { id: 'stallion', name: 'Stallion', description: 'Year of the Horse limited edition. Dark leather, osmanthus, and amber.', price: 120, image: '/api/placeholder/400/500', category: 'Zodiac' },
 ]
+
+function addToCart(item: { id: string; name: string; price: number; quantity?: number }) {
+  const stored = typeof window !== 'undefined' ? localStorage.getItem('cart') : null
+  const cart = stored ? JSON.parse(stored) : []
+  const idx = cart.findIndex((i: any) => i.id === item.id)
+  if (idx >= 0) cart[idx].quantity = (cart[idx].quantity || 1) + (item.quantity || 1)
+  else cart.push({ id: item.id, name: item.name, price: item.price, quantity: item.quantity || 1 })
+  localStorage.setItem('cart', JSON.stringify(cart))
+  window.dispatchEvent(new Event('cart:update'))
+}
 
 export default function FeaturedProducts() {
   return (
@@ -35,8 +45,8 @@ export default function FeaturedProducts() {
 
                     {/* Action Buttons */}
                     <div className="absolute top-4 right-4 flex flex-col space-y-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                      <button className="w-8 h-8 bg-white/90 rounded-full flex items-center justify-center hover:bg-white text-black transition-colors duration-300"><Heart size={16} /></button>
-                      <button className="w-8 h-8 bg-white/90 rounded-full flex items-center justify-center hover:bg-white text-black transition-colors duration-300"><ShoppingBag size={16} /></button>
+                      <button className="w-8 h-8 bg-white/90 rounded-full flex items-center justify-center hover:bg-white text-black transition-colors duration-300" onClick={() => addToCart({ id: product.id, name: product.name, price: product.price })}><Heart size={16} /></button>
+                      <button className="w-8 h-8 bg-white/90 rounded-full flex items-center justify-center hover:bg-white text-black transition-colors duration-300" onClick={() => addToCart({ id: product.id, name: product.name, price: product.price })}><ShoppingBag size={16} /></button>
                     </div>
 
                     {/* Category Badge */}
@@ -61,12 +71,13 @@ export default function FeaturedProducts() {
                     <p className="text-sm text-white/70 mb-4 line-clamp-2">{product.description}</p>
                     <div className="flex items-center justify-between">
                       <span className="text-xl font-semibold text-white">$120</span>
+                      <button className="btn-outline-light" onClick={() => addToCart({ id: product.id, name: product.name, price: product.price })}>Add to cart</button>
                     </div>
                   </div>
                 </div>
               </div>
-            )
-          })}
+            )}
+          )}
         </div>
 
         <div className="text-center mt-12 animate-slide-up-delayed">
