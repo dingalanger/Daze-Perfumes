@@ -2,14 +2,8 @@
 
 import React from 'react'
 import Link from 'next/link'
-import { Heart, ShoppingBag, Crown, Sparkles } from 'lucide-react'
-
-const featuredProducts = [
-  { id: 'pear', name: 'Pear', description: 'Juicy Asian pear with a crisp, cool sparkle and soft musk.', price: 120, image: '/api/placeholder/400/500', category: 'Signature' },
-  { id: 'boba', name: 'Boba Tea', description: 'Milky black tea with brown sugar pearls and vanilla cream.', price: 120, image: '/api/placeholder/400/500', category: 'Signature' },
-  { id: 'rice', name: 'Steamed Rice', description: 'Warm steamed jasmine rice with a soft, comforting aura.', price: 120, image: '/api/placeholder/400/500', category: 'Signature' },
-  { id: 'stallion', name: 'Stallion', description: 'Year of the Horse limited edition. Dark leather, osmanthus, and amber.', price: 120, image: '/api/placeholder/400/500', category: 'Zodiac' },
-]
+import { ShoppingBag, Crown, Sparkles } from 'lucide-react'
+import { products as featuredProducts } from '@/lib/products'
 
 function addToCart(item: { id: string; name: string; price: number; quantity?: number }) {
   const stored = typeof window !== 'undefined' ? localStorage.getItem('cart') : null
@@ -36,39 +30,38 @@ export default function FeaturedProducts() {
             return (
               <div key={product.id} className="group animate-slide-up" style={{ animationDelay: `${index * 0.1}s` }}>
                 <div className={`relative rounded-lg overflow-hidden card-hover ${isStallion ? 'card-gold-special' : 'bg-neutral-900'}`}>
-                  <div className={`relative h-80 ${isStallion ? 'bg-neutral-900' : 'bg-neutral-800'}`}>
+                  <Link href={`/product/${product.slug}`} className={`block relative h-80 ${isStallion ? 'bg-neutral-900' : 'bg-neutral-800'}`}>
                     <div className="absolute inset-0 flex items-center justify-center">
                       <div className={`w-32 h-32 ${isStallion ? 'bg-white/10 border-white/30' : 'bg-white/5 border-white/10'} border rounded-full flex items-center justify-center`}>
                         <span className="text-white text-xl font-serif font-semibold">{product.name.split(' ')[0]}</span>
                       </div>
                     </div>
+                  </Link>
 
-                    {/* Action Buttons */}
-                    <div className="absolute top-4 right-4 flex flex-col space-y-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                      <button className="w-8 h-8 bg-white/90 rounded-full flex items-center justify-center hover:bg-white text-black transition-colors duration-300" onClick={() => addToCart({ id: product.id, name: product.name, price: product.price })}><Heart size={16} /></button>
-                      <button className="w-8 h-8 bg-white/90 rounded-full flex items-center justify-center hover:bg-white text-black transition-colors duration-300" onClick={() => addToCart({ id: product.id, name: product.name, price: product.price })}><ShoppingBag size={16} /></button>
-                    </div>
-
-                    {/* Category Badge */}
-                    <div className="absolute top-4 left-4 flex items-center gap-2">
-                      {isStallion && <Crown size={16} className="text-daze-gold" />}
-                      <span className={`px-3 py-1 text-xs font-medium rounded-full ${isStallion ? 'badge-gold-minimal' : 'bg-white/10 text-white'}`}>
-                        {isStallion ? 'Zodiac — Limited Edition' : product.category}
-                      </span>
-                    </div>
-
-                    {isStallion && (
-                      <div className="absolute -top-6 -right-6 rotate-12 text-daze-gold/50">
-                        <Sparkles size={40} />
-                      </div>
-                    )}
+                  {/* Action Buttons */}
+                  <div className="absolute top-4 right-4 flex flex-col space-y-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                    <button className="w-8 h-8 bg-white/90 rounded-full flex items-center justify-center hover:bg-white text-black transition-colors duration-300" onClick={() => addToCart({ id: product.id, name: product.name, price: product.price })}><ShoppingBag size={16} /></button>
                   </div>
+
+                  {/* Category Badge */}
+                  <div className="absolute top-4 left-4 flex items-center gap-2">
+                    {isStallion && <Crown size={16} className="text-daze-gold" />}
+                    <span className={`px-3 py-1 text-xs font-medium rounded-full ${isStallion ? 'badge-gold-minimal' : 'bg-white/10 text-white'}`}>
+                      {isStallion ? 'Zodiac — Limited Edition' : product.category}
+                    </span>
+                  </div>
+
+                  {isStallion && (
+                    <div className="absolute -top-6 -right-6 rotate-12 text-daze-gold/50">
+                      <Sparkles size={40} />
+                    </div>
+                  )}
 
                   <div className="p-6">
                     <div className="mb-2">
-                      <h3 className="text-lg font-semibold text-white">{product.name}</h3>
+                      <h3 className="text-lg font-semibold text-white"><Link href={`/product/${product.slug}`}>{product.name}</Link></h3>
                     </div>
-                    <p className="text-sm text-white/70 mb-4 line-clamp-2">{product.description}</p>
+                    <p className="text-sm text-white/70 mb-4 line-clamp-2">{product.shortDescription}</p>
                     <div className="flex items-center justify-between">
                       <span className="text-xl font-semibold text-white">$120</span>
                       <button className="btn-outline-light" onClick={() => addToCart({ id: product.id, name: product.name, price: product.price })}>Add to cart</button>
@@ -76,12 +69,8 @@ export default function FeaturedProducts() {
                   </div>
                 </div>
               </div>
-            )}
-          )}
-        </div>
-
-        <div className="text-center mt-12 animate-slide-up-delayed">
-          <Link href="/collection" className="btn-outline-light">View All Fragrances</Link>
+            )
+          })}
         </div>
       </div>
     </section>
