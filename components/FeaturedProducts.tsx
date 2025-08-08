@@ -8,11 +8,12 @@ import { products as featuredProducts } from '@/lib/products'
 function addToCart(item: { id: string; name: string; price: number; quantity?: number }) {
   const stored = typeof window !== 'undefined' ? localStorage.getItem('cart') : null
   const cart = stored ? JSON.parse(stored) : []
-  const idx = cart.findIndex((i: any) => i.id === item.id)
+  const idx = cart.findIndex((i: any) => i.id === item.id && i.name === item.name)
   if (idx >= 0) cart[idx].quantity = (cart[idx].quantity || 1) + (item.quantity || 1)
   else cart.push({ id: item.id, name: item.name, price: item.price, quantity: item.quantity || 1 })
   localStorage.setItem('cart', JSON.stringify(cart))
   window.dispatchEvent(new Event('cart:update'))
+  window.dispatchEvent(new Event('cart:add'))
 }
 
 export default function FeaturedProducts() {
@@ -59,7 +60,7 @@ export default function FeaturedProducts() {
                     <p className="text-sm text-white/70 mb-4 line-clamp-2">{product.shortDescription}</p>
                     <div className="flex items-center justify-between">
                       <span className="text-xl font-semibold text-white">$120</span>
-                      <button className="btn-outline-light" onClick={() => addToCart({ id: product.id, name: product.name, price: product.price })}>Add to cart</button>
+                      <button className="btn-outline-light" onClick={() => addToCart({ id: product.id, name: product.name, price: product.price })}>Preorder now</button>
                     </div>
                   </div>
                 </div>

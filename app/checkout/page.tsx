@@ -50,13 +50,13 @@ export default function CheckoutPage() {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
             {/* Cart summary (main) */}
             <div className="lg:col-span-2 bg-neutral-950 p-8 border border-white/10 rounded-lg">
-              <h1 className="text-3xl font-serif font-bold text-white mb-6">Your Cart</h1>
+              <h1 className="text-3xl font-serif font-bold text-white mb-6">Your Preorder</h1>
               {items.length === 0 ? (
                 <p className="text-white/70">Your cart is empty. Add items from the collection.</p>
               ) : (
                 <div className="space-y-4">
                   {items.map((item) => (
-                    <div key={item.id} className="flex items-center justify-between border-b border-white/10 pb-4">
+                    <div key={item.id+item.name} className="flex items-center justify-between border-b border-white/10 pb-4">
                       <div>
                         <p className="font-medium text-white">{item.name}</p>
                         <p className="text-sm text-white/50">Qty {item.quantity || 1}</p>
@@ -73,7 +73,7 @@ export default function CheckoutPage() {
 
             {/* Order Summary */}
             <aside className="bg-neutral-950 p-8 border border-white/10 rounded-lg">
-              <h2 className="text-lg font-semibold text-white mb-4">Order summary</h2>
+              <h2 className="text-lg font-semibold text-white mb-4">Preorder summary</h2>
               <div className="space-y-4 text-white/80">
                 <div className="flex justify-between text-sm">
                   <span className="text-white/60">Subtotal</span>
@@ -88,7 +88,7 @@ export default function CheckoutPage() {
                   <span className="text-white">${subtotal.toFixed(2)}</span>
                 </div>
               </div>
-              <button type="button" onClick={handleCheckout} className="btn-primary w-full mt-6">Check out</button>
+              <button type="button" onClick={handleCheckout} className="btn-primary w-full mt-6">Preorder</button>
               <p className="text-xs text-white/50 mt-2">Payments handled by Stripe. You’ll enter your information on the secure Stripe page.</p>
             </aside>
           </div>
