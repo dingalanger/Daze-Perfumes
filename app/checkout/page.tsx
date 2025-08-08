@@ -5,6 +5,13 @@ import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 
 export default function CheckoutPage() {
+  const handlePayNow = async () => {
+    const res = await fetch('/api/checkout/session', { method: 'POST' })
+    if (!res.ok) return // optionally show error
+    const { url } = await res.json()
+    if (url) window.location.href = url
+  }
+
   return (
     <main className="min-h-screen pt-20 bg-daze-silk">
       <Header />
@@ -16,7 +23,7 @@ export default function CheckoutPage() {
             <div className="lg:col-span-2 bg-white p-8 border border-daze-cream rounded-lg">
               <h1 className="text-3xl font-serif font-bold text-daze-charcoal mb-6">Checkout</h1>
 
-              <form className="space-y-8">
+              <form className="space-y-8" onSubmit={(e) => e.preventDefault()}>
                 {/* Contact */}
                 <div>
                   <h2 className="text-lg font-semibold mb-4">Contact</h2>
@@ -47,7 +54,7 @@ export default function CheckoutPage() {
                   </div>
                 </div>
 
-                <button type="button" className="btn-primary w-full">Pay now</button>
+                <button type="button" onClick={handlePayNow} className="btn-primary w-full">Pay now</button>
                 <p className="text-xs text-daze-charcoal/60">This is a demo checkout UI. Connect Stripe for live payments.</p>
               </form>
             </div>
@@ -58,7 +65,7 @@ export default function CheckoutPage() {
               <div className="space-y-4">
                 <div className="flex justify-between text-sm">
                   <span>Golden Orchid (50ml)</span>
-                  <span>$285</span>
+                  <span>$120</span>
                 </div>
                 <div className="flex justify-between text-sm">
                   <span>Shipping</span>
@@ -66,7 +73,7 @@ export default function CheckoutPage() {
                 </div>
                 <div className="border-t border-daze-cream pt-4 flex justify-between font-semibold">
                   <span>Total</span>
-                  <span>$285</span>
+                  <span>$120</span>
                 </div>
               </div>
               <div className="mt-6 text-sm text-daze-charcoal/70">
