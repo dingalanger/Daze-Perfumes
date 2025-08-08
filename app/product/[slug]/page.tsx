@@ -1,21 +1,40 @@
+'use client'
+
 import { products } from '@/lib/products'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import Link from 'next/link'
 
-function addToCart(item: { id: string; name: string; price: number; quantity?: number }) {
+type CartItem = { id: string; name: string; price: number; quantity?: number }
+
+function writeCartItem(item: CartItem) {
   const stored = typeof window !== 'undefined' ? localStorage.getItem('cart') : null
   const cart = stored ? JSON.parse(stored) : []
   const idx = cart.findIndex((i: any) => i.id === item.id)
   if (idx >= 0) cart[idx].quantity = (cart[idx].quantity || 1) + (item.quantity || 1)
   else cart.push({ id: item.id, name: item.name, price: item.price, quantity: item.quantity || 1 })
   localStorage.setItem('cart', JSON.stringify(cart))
-  if (typeof window !== 'undefined') window.dispatchEvent(new Event('cart:update'))
+  window.dispatchEvent(new Event('cart:update'))
+  window.dispatchEvent(new Event('cart:add'))
+}
+
+function showToast(message: string) {
+  const el = document.createElement('div')
+  el.className = 'fixed bottom-6 left-1/2 -translate-x-1/2 bg-white text-black px-4 py-2 rounded shadow-lg transition-opacity duration-700 opacity-0 z-[100]' 
+  el.textContent = message
+  document.body.appendChild(el)
+  requestAnimationFrame(() => { el.classList.remove('opacity-0') })
+  setTimeout(() => { el.classList.add('opacity-0'); setTimeout(() => el.remove(), 700) }, 1500)
 }
 
 export default function ProductPage({ params }: { params: { slug: string } }) {
   const product = products.find(p => p.slug === params.slug)
   if (!product) return <div className="min-h-screen bg-black text-white flex items-center justify-center">Not found</div>
+
+  const add = () => {
+    writeCartItem({ id: product.id, name: product.name, price: product.price, quantity: 1 })
+    showToast(`${product.name} added to cart`)
+  }
 
   return (
     <main className="min-h-screen bg-black">
@@ -53,12 +72,7 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
               </div>
             </div>
 
-            <button
-              className="w-full btn-outline-light mb-4"
-              onClick={() => addToCart({ id: product.id, name: product.name, price: product.price, quantity: 1 })}
-            >
-              Add to cart
-            </button>
+            <button className="w-full btn-outline-light mb-4" onClick={add}>Add to cart</button>
 
             <p className="text-white/80 mb-8">Arrives soon — shipping included</p>
 

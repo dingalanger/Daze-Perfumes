@@ -8,6 +8,7 @@ import { Menu, X, ShoppingBag, User, Search } from 'lucide-react'
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [cartCount, setCartCount] = useState(0)
+  const [pulse, setPulse] = useState(false)
 
   useEffect(() => {
     try {
@@ -18,8 +19,10 @@ export default function Header() {
         if (s) setCartCount(JSON.parse(s).reduce((sum: number, i: any) => sum + (i.quantity || 1), 0))
         else setCartCount(0)
       }
+      const added = () => { setPulse(true); setTimeout(() => setPulse(false), 600) }
       window.addEventListener('cart:update', handler)
-      return () => window.removeEventListener('cart:update', handler)
+      window.addEventListener('cart:add', added)
+      return () => { window.removeEventListener('cart:update', handler); window.removeEventListener('cart:add', added) }
     } catch {}
   }, [])
 
@@ -50,7 +53,7 @@ export default function Header() {
             <Link href="/account" className="p-2 text-white/80 hover:text-white transition-colors duration-300">
               <User size={20} />
             </Link>
-            <Link href="/checkout" className="relative p-2 text-white/80 hover:text-white transition-colors duration-300">
+            <Link href="/checkout" className={`relative p-2 text-white/80 hover:text-white transition-colors duration-300 ${pulse ? 'animate-ping-once' : ''}`}>
               <ShoppingBag size={20} />
               {cartCount > 0 && (
                 <span className="absolute -top-1 -right-1 text-[10px] px-1.5 py-0.5 bg-white text-black rounded-full">{cartCount}</span>
@@ -80,6 +83,17 @@ export default function Header() {
           </div>
         )}
       </div>
+      <style jsx global>{`
+        .animate-ping-once { position: relative; }
+        .animate-ping-once::after {
+          content: '';
+          position: absolute; inset: -6px;
+          border-radius: 9999px;
+          border: 1px solid rgba(255,255,255,0.4);
+          animation: pingOnce 0.6s ease-out forwards;
+        }
+        @keyframes pingOnce { 0% { opacity: 1; transform: scale(0.9); } 100% { opacity: 0; transform: scale(1.4); } }
+      `}</style>
     </header>
   )
 } 
