@@ -1,0 +1,87 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap');
+
+@layer base {
+  html { scroll-behavior: smooth; }
+  body { @apply bg-black text-white; font-family: 'Inter', sans-serif; }
+  h1, h2, h3 { @apply font-serif font-bold tracking-wide text-white; }
+  h4, h5, h6 { @apply font-serif font-semibold tracking-wide text-white; }
+  p { @apply text-white/80; }
+  small, .text-xs, .text-sm { color: rgba(255,255,255,0.7); }
+}
+
+@layer components {
+  .btn-primary { @apply bg-daze-gold hover:bg-daze-bronze text-white font-medium py-3 px-6 rounded-none transition-all duration-300 hover:scale-105; }
+  .btn-secondary { @apply bg-transparent border-2 border-daze-gold text-daze-gold hover:bg-daze-gold hover:text-white font-medium py-3 px-6 rounded-none transition-all duration-300; }
+  /* Monochrome variants */
+  .btn-light { @apply bg-white text-black hover:bg-white/90 font-medium py-3 px-6 rounded-none transition-all duration-300; }
+  .btn-outline-light { @apply bg-transparent border-2 border-white text-white hover:bg-white hover:text-black font-medium py-3 px-6 rounded-none transition-all duration-300; }
+
+  .section-padding { @apply py-16 px-4 sm:px-6 lg:px-8; }
+  .container-custom { @apply max-w-7xl mx-auto; }
+  .text-gradient { @apply bg-gradient-to-r from-white to-white bg-clip-text text-transparent; }
+  .card-hover { @apply transition-all duration-300 hover:scale-105 hover:shadow-2xl; }
+  .card-gold-special { @apply border border-white/10; background: radial-gradient(120% 120% at 0% 0%, rgba(212,175,55,0.15), transparent 60%), radial-gradient(120% 120% at 100% 100%, rgba(240,215,126,0.15), transparent 60%), #111111; box-shadow: 0 0 0 1px rgba(212,175,55,0.25), 0 8px 28px rgba(212,175,55,0.18), inset 0 0 40px rgba(212,175,55,0.08); }
+  .badge-gold-metallic { background: linear-gradient(180deg, #fff7d1, #e5c35a 40%, #a87918 60%, #f0d77e); color: #1a1a1a; border: 1px solid rgba(212,175,55,0.4); }
+
+  /* Text reveal */
+  .reveal-text { position: relative; overflow: hidden; }
+  .reveal-text::after { content: ''; position: absolute; inset: 0; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.75), transparent); transform: translateX(-100%); animation: sheen 1.2s ease 0.4s forwards; }
+  @keyframes sheen { to { transform: translateX(100%); } }
+
+  /* Gift styles */
+  .gift-container { @apply mt-20 md:mt-24; }
+  .gift-box { @apply relative w-48 h-40 mx-auto; }
+  .gift-body { @apply absolute bottom-0 left-0 right-0 h-32 bg-neutral-900 border border-white/10; }
+  .gift-lid { @apply absolute -top-2 left-0 right-0 h-12 bg-neutral-800 border border-white/10 origin-bottom; transform: translateY(0) rotate(0); transition: transform 600ms ease; }
+  .gift-box.open .gift-lid { transform: translateY(-18px) rotate(-12deg); }
+  .gift-ribbon-vertical { @apply absolute top-0 bottom-0 left-1/2 w-3 bg-white; transform: translateX(-50%); }
+  .gift-ribbon-horizontal { @apply absolute left-0 right-0 top-1/2 h-3 bg-white; transform: translateY(-50%); }
+  .gift-bow-left { @apply absolute -top-4 left-1/2 w-6 h-6 bg-white rounded-full; transform: translateX(-90%) scale(1); }
+  .gift-bow-right { @apply absolute -top-4 left-1/2 w-6 h-6 bg-white rounded-full; transform: translateX(-10%) scale(1); }
+
+  /* Bottle */
+  .bottle { @apply absolute -top-8 left-1/2 opacity-0 pointer-events-none; transform: translateX(-50%) translateY(10px) scale(0.9); transition: all 700ms cubic-bezier(0.19, 1, 0.22, 1); }
+  .bottle.reveal { @apply opacity-100; transform: translateX(-50%) translateY(-40px) scale(1); }
+  .bottle-body { @apply w-24 h-32 bg-gradient-to-b from-neutral-300 to-neutral-100 rounded-b-xl rounded-t-md mx-auto relative flex items-end justify-center; box-shadow: inset 0 0 10px rgba(255,255,255,0.5); }
+  .bottle-neck { @apply w-8 h-6 bg-neutral-200 mx-auto rounded-t-md; }
+  .bottle-cap { @apply w-10 h-3 bg-neutral-400 mx-auto rounded-b-sm -mt-1; }
+  .bottle-label { @apply mb-4 px-3 py-1 rounded-sm text-xs font-semibold tracking-widest; background: linear-gradient(135deg, #FFFFFF, #FFFFFF, #CCCCCC); color: #1a1a1a; box-shadow: 0 0 10px rgba(255,255,255,0.2); }
+}
+
+@layer utilities { .text-balance { text-wrap: balance; } }
+
+/* Animations */
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes float { 0%, 100% { transform: translateY(0) rotate(0); } 50% { transform: translateY(-20px) rotate(2deg); } }
+@keyframes floatDelayed { 0%, 100% { transform: translateY(0) rotate(0); } 50% { transform: translateY(-15px) rotate(-1deg); } }
+@keyframes floatSlow { 0%, 100% { transform: translateY(0) rotate(0); } 50% { transform: translateY(-10px) rotate(1deg); } }
+@keyframes confettiFall { 0% { transform: translate3d(0, -10%, 0) rotate(0deg); opacity: 0; } 10% { opacity: 1; } 100% { transform: translate3d(var(--drift, 0px), 120%, 0) rotate(360deg); opacity: 1; } }
+
+.animate-fade-in { animation: fadeIn 1s ease-out; }
+.animate-slide-up { animation: slideUp 1s ease-out 0.2s both; }
+.animate-slide-up-delayed { animation: slideUp 1s ease-out 0.4s both; }
+.animate-fade-in-delayed { animation: fadeIn 1s ease-out 0.6s both; }
+.animate-fade-in-slow { animation: fadeIn 1s ease-out 1s both; }
+.animate-float { animation: float 6s ease-in-out infinite; }
+.animate-float-delayed { animation: floatDelayed 8s ease-in-out infinite; animation-delay: 2s; }
+.animate-float-slow { animation: floatSlow 10s ease-in-out infinite; animation-delay: 4s; }
+
+/* Metallic gold small text shimmer */
+.gold-small { color: rgba(255,255,255,0.7); text-shadow: none; }
+.metallic-gold { color: #ffffff; background: none; -webkit-background-clip: initial; background-clip: initial; text-shadow: none; }
+
+/* Confetti pieces */
+.confetti-piece {
+  position: absolute;
+  top: 0;
+  width: 8px;
+  height: 14px;
+  border-radius: 2px;
+  opacity: 0.9;
+  animation: confettiFall var(--duration, 3.5s) linear var(--delay, 0s) infinite;
+} 
