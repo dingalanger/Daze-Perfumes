@@ -2,7 +2,7 @@
 
 import React from 'react'
 import Link from 'next/link'
-import { ShoppingBag, Crown, Sparkles } from 'lucide-react'
+import { Crown, Sparkles } from 'lucide-react'
 import { products as featuredProducts } from '@/lib/products'
 
 function addToCart(item: { id: string; name: string; price: number; quantity?: number }) {
@@ -37,11 +37,6 @@ export default function FeaturedProducts() {
                       </div>
                     </div>
                   </Link>
-
-                  {/* Action Buttons */}
-                  <div className="absolute top-4 right-4 flex flex-col space-y-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                    <button className="w-8 h-8 bg-white/90 rounded-full flex items-center justify-center hover:bg-white text-black transition-colors duration-300" onClick={() => addToCart({ id: product.id, name: product.name, price: product.price })}><ShoppingBag size={16} /></button>
-                  </div>
 
                   {/* Category Badge */}
                   <div className="absolute top-4 left-4 flex items-center gap-2">
