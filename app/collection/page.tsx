@@ -1,13 +1,13 @@
 import React from 'react'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
-import { Star, Heart, ShoppingBag, Filter, Crown, Sparkles } from 'lucide-react'
+import { Heart, ShoppingBag, Filter, Crown, Sparkles } from 'lucide-react'
 
 const allProducts = [
-  { id: 1, name: 'Pear', description: 'Juicy Asian pear with a crisp, cool sparkle and soft musk.', price: 95, category: 'Signature', rating: 4.9, reviews: 127, notes: ['Asian Pear', 'Lily', 'White Musk', 'Aqua'] },
-  { id: 2, name: 'Boba Tea', description: 'Milky black tea with brown sugar pearls and vanilla cream.', price: 110, category: 'Signature', rating: 4.8, reviews: 89, notes: ['Black Tea', 'Brown Sugar', 'Vanilla', 'Milk'] },
-  { id: 3, name: 'Steamed Rice', description: 'Warm steamed jasmine rice with a soft, comforting aura.', price: 89, category: 'Signature', rating: 4.7, reviews: 156, notes: ['Jasmine Rice', 'Clean Musk', 'Rice Steam', 'Warmth'] },
-  { id: 4, name: 'Stallion', description: 'Year of the Horse limited edition. Dark leather, osmanthus, and amber.', price: 120, category: 'Zodiac', rating: 5.0, reviews: 12, notes: ['Osmanthus', 'Leather', 'Amber', 'Saffron'] },
+  { id: 1, name: 'Pear', description: 'Juicy Asian pear with a crisp, cool sparkle and soft musk.', price: 120, category: 'Signature', notes: ['Asian Pear', 'Lily', 'White Musk', 'Aqua'] },
+  { id: 2, name: 'Boba Tea', description: 'Milky black tea with brown sugar pearls and vanilla cream.', price: 120, category: 'Signature', notes: ['Black Tea', 'Brown Sugar', 'Vanilla', 'Milk'] },
+  { id: 3, name: 'Steamed Rice', description: 'Warm steamed jasmine rice with a soft, comforting aura.', price: 120, category: 'Signature', notes: ['Jasmine Rice', 'Clean Musk', 'Rice Steam', 'Warmth'] },
+  { id: 4, name: 'Stallion', description: 'Year of the Horse limited edition. Dark leather, osmanthus, and amber.', price: 120, category: 'Zodiac', notes: ['Osmanthus', 'Leather', 'Amber', 'Saffron'] },
 ]
 
 export default function CollectionPage() {
@@ -90,13 +90,13 @@ export default function CollectionPage() {
                       {/* Category Badge */}
                       <div className="absolute top-4 left-4 flex items-center gap-2">
                         {isStallion && <Crown size={16} className="text-daze-gold" />}
-                        <span className={`px-3 py-1 text-xs font-medium rounded-full ${isStallion ? 'badge-gold-metallic' : 'bg-white/10 text-white'} border border-white/20`}>
+                        <span className={`px-3 py-1 text-xs font-medium rounded-full ${isStallion ? 'badge-gold-minimal' : 'bg-white/10 text-white'} border border-white/20`}>
                           {isStallion ? 'Zodiac — Limited Edition' : product.category}
                         </span>
                       </div>
 
                       {isStallion && (
-                        <div className="absolute -top-6 -right-6 rotate-12 text-daze-gold/70">
+                        <div className="absolute -top-6 -right-6 rotate-12 text-daze-gold/50">
                           <Sparkles size={40} />
                         </div>
                       )}
@@ -104,12 +104,8 @@ export default function CollectionPage() {
 
                     {/* Product Info */}
                     <div className="p-6">
-                      <div className="flex items-center justify-between mb-2">
+                      <div className="mb-2">
                         <h3 className="text-lg font-semibold text-white">{product.name}</h3>
-                        <div className="flex items-center space-x-1">
-                          <Star size={16} className="text-white fill-current" />
-                          <span className="text-sm text-white/70">{product.rating}</span>
-                        </div>
                       </div>
                       
                       <p className="text-sm text-white/60 mb-4 line-clamp-2">
@@ -130,10 +126,7 @@ export default function CollectionPage() {
                       
                       <div className="flex items-center justify-between">
                         <span className="text-xl font-semibold text-white">
-                          ${product.price}
-                        </span>
-                        <span className="text-xs text-white/50">
-                          {product.reviews} reviews
+                          $120
                         </span>
                       </div>
                     </div>
