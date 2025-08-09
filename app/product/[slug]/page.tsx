@@ -36,7 +36,7 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
 
   const add = () => {
     writeCartItem({ id: product.id, name: `${product.name} ${size}`, price: product.price, quantity: qty })
-    showToast(`${product.name} preordered`)
+    showToast(`${product.name} preorder added to cart`)
   }
 
   return (

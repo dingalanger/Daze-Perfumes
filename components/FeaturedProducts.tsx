@@ -16,6 +16,15 @@ function addToCart(item: { id: string; name: string; price: number; quantity?: n
   window.dispatchEvent(new Event('cart:add'))
 }
 
+function showToast(message: string) {
+  const el = document.createElement('div')
+  el.className = 'fixed bottom-6 left-1/2 -translate-x-1/2 bg-white text-black px-4 py-2 rounded shadow-lg transition-opacity duration-700 opacity-0 z-[100]'
+  el.textContent = message
+  document.body.appendChild(el)
+  requestAnimationFrame(() => { el.classList.remove('opacity-0') })
+  setTimeout(() => { el.classList.add('opacity-0'); setTimeout(() => el.remove(), 700) }, 1500)
+}
+
 export default function FeaturedProducts() {
   return (
     <section className="section-padding bg-black">
@@ -60,7 +69,7 @@ export default function FeaturedProducts() {
                     <p className="text-sm text-white/70 mb-4 line-clamp-2">{product.shortDescription}</p>
                     <div className="flex items-center justify-between">
                       <span className="text-xl font-semibold text-white">$120</span>
-                      <button className="btn-outline-light" onClick={() => addToCart({ id: product.id, name: product.name, price: product.price })}>Preorder now</button>
+                      <button className="btn-outline-light" onClick={() => { addToCart({ id: product.id, name: product.name, price: product.price }); showToast('Preorder added to cart') }}>Preorder now</button>
                     </div>
                   </div>
                 </div>
