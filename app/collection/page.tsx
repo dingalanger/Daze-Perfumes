@@ -1,14 +1,31 @@
+'use client'
+
 import React from 'react'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
-import { Heart, ShoppingBag, Filter, Crown, Sparkles } from 'lucide-react'
+import Link from 'next/link'
+import { Filter, Crown, Sparkles } from 'lucide-react'
+import { products as allProducts } from '@/lib/products'
 
-const allProducts = [
-  { id: 1, name: 'Pear', description: 'Juicy Asian pear with a crisp, cool sparkle and soft musk.', price: 120, category: 'Signature', notes: ['Asian Pear', 'Lily', 'White Musk', 'Aqua'] },
-  { id: 2, name: 'Boba Tea', description: 'Milky black tea with brown sugar pearls and vanilla cream.', price: 120, category: 'Signature', notes: ['Black Tea', 'Brown Sugar', 'Vanilla', 'Milk'] },
-  { id: 3, name: 'Steamed Rice', description: 'Warm steamed jasmine rice with a soft, comforting aura.', price: 120, category: 'Signature', notes: ['Jasmine Rice', 'Clean Musk', 'Rice Steam', 'Warmth'] },
-  { id: 4, name: 'Stallion', description: 'Year of the Horse limited edition. Dark leather, osmanthus, and amber.', price: 120, category: 'Zodiac', notes: ['Osmanthus', 'Leather', 'Amber', 'Saffron'] },
-]
+function addToCart(item: { id: string; name: string; price: number; quantity?: number }) {
+  const stored = typeof window !== 'undefined' ? localStorage.getItem('cart') : null
+  const cart = stored ? JSON.parse(stored) : []
+  const idx = cart.findIndex((i: any) => i.id === item.id && i.name === item.name)
+  if (idx >= 0) cart[idx].quantity = (cart[idx].quantity || 1) + (item.quantity || 1)
+  else cart.push({ id: item.id, name: item.name, price: item.price, quantity: item.quantity || 1 })
+  localStorage.setItem('cart', JSON.stringify(cart))
+  window.dispatchEvent(new Event('cart:update'))
+  window.dispatchEvent(new Event('cart:add'))
+}
+
+function showToast(message: string) {
+  const el = document.createElement('div')
+  el.className = 'fixed bottom-6 left-1/2 -translate-x-1/2 bg-white text-black px-4 py-2 rounded shadow-lg transition-opacity duration-700 opacity-0 z-[100]'
+  el.textContent = message
+  document.body.appendChild(el)
+  requestAnimationFrame(() => { el.classList.remove('opacity-0') })
+  setTimeout(() => { el.classList.add('opacity-0'); setTimeout(() => el.remove(), 700) }, 1500)
+}
 
 export default function CollectionPage() {
   return (
@@ -36,7 +53,7 @@ export default function CollectionPage() {
               Our <span className="text-white">Collection</span>
             </h1>
             <p className="text-xl text-white/70 max-w-3xl mx-auto mb-8">
-              Discover our curated selection of four signature creations, including the limited edition Year of the Horse release.
+              Discover our curated selection of fragrances, including the limited edition Year of the Horse release.
             </p>
           </div>
         </div>
@@ -63,71 +80,42 @@ export default function CollectionPage() {
             {allProducts.map((product, index) => {
               const isStallion = product.name === 'Stallion'
               return (
-                <div
-                  key={product.id}
-                  className="group animate-slide-up"
-                  style={{ animationDelay: `${index * 0.1}s` }}
-                >
+                <div key={product.id} className="group animate-slide-up" style={{ animationDelay: `${index * 0.1}s` }}>
                   <div className={`relative rounded-lg overflow-hidden card-hover border border-white/10 ${isStallion ? 'card-gold-special' : 'bg-neutral-900'}`}>
                     {/* Product Image */}
-                    <div className={`relative h-80 ${isStallion ? 'bg-neutral-900' : 'bg-neutral-800'}`}>
+                    <Link href={`/product/${product.slug}`} className={`block relative h-80 ${isStallion ? 'bg-neutral-900' : 'bg-neutral-800'}`}>
                       <div className="absolute inset-0 flex items-center justify-center">
                         <div className={`w-32 h-32 ${isStallion ? 'bg-white/10 border-white/30' : 'bg-white/10 border-white/20'} rounded-full flex items-center justify-center border`}>
                           <span className="text-white text-2xl font-cursive">{product.name.split(' ')[0]}</span>
                         </div>
                       </div>
-                      
-                      {/* Action Buttons */}
-                      <div className="absolute top-4 right-4 flex flex-col space-y-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                        <button className="w-8 h-8 bg-white/10 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-white text-white hover:text-black transition-colors duration-300">
-                          <Heart size={16} />
-                        </button>
-                        <button className="w-8 h-8 bg-white/10 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-white text-white hover:text-black transition-colors duration-300">
-                          <ShoppingBag size={16} />
-                        </button>
-                      </div>
+                    </Link>
 
-                      {/* Category Badge */}
-                      <div className="absolute top-4 left-4 flex items-center gap-2">
-                        {isStallion && <Crown size={16} className="text-daze-gold" />}
-                        <span className={`px-3 py-1 text-xs font-medium rounded-full ${isStallion ? 'badge-gold-minimal' : 'bg-white/10 text-white'} border border-white/20`}>
-                          {isStallion ? 'Zodiac — Limited Edition' : product.category}
-                        </span>
-                      </div>
-
-                      {isStallion && (
-                        <div className="absolute -top-6 -right-6 rotate-12 text-daze-gold/50">
-                          <Sparkles size={40} />
-                        </div>
-                      )}
+                    {/* Category Badge */}
+                    <div className="absolute top-4 left-4 flex items-center gap-2">
+                      {isStallion && <Crown size={16} className="text-daze-gold" />}
+                      <span className={`px-3 py-1 text-xs font-medium rounded-full ${isStallion ? 'badge-gold-minimal' : 'bg-white/10 text-white'} border border-white/20`}>
+                        {isStallion ? 'Zodiac — Limited Edition' : product.category}
+                      </span>
                     </div>
+
+                    {isStallion && (
+                      <div className="absolute -top-6 -right-6 rotate-12 text-daze-gold/50">
+                        <Sparkles size={40} />
+                      </div>
+                    )}
 
                     {/* Product Info */}
                     <div className="p-6">
                       <div className="mb-2">
-                        <h3 className="text-lg font-semibold text-white">{product.name}</h3>
+                        <h3 className="text-lg font-semibold text-white"><Link href={`/product/${product.slug}`}>{product.name}</Link></h3>
                       </div>
-                      
-                      <p className="text-sm text-white/60 mb-4 line-clamp-2">
-                        {product.description}
-                      </p>
-                      
-                      {/* Fragrance Notes */}
-                      <div className="mb-4">
-                        <p className="text-xs text-white/50 mb-2">Notes:</p>
-                        <div className="flex flex-wrap gap-1">
-                          {product.notes.map((note, idx) => (
-                            <span key={idx} className="px-2 py-1 bg-white/10 text-white/70 text-xs rounded border border-white/20">
-                              {note}
-                            </span>
-                          ))}
-                        </div>
-                      </div>
-                      
+
+                      <p className="text-sm text-white/60 mb-4 line-clamp-2">{product.shortDescription}</p>
+
                       <div className="flex items-center justify-between">
-                        <span className="text-xl font-semibold text-white">
-                          $120
-                        </span>
+                        <span className="text-xl font-semibold text-white">$120</span>
+                        <button className="btn-outline-light" onClick={() => { addToCart({ id: product.id, name: product.name, price: product.price }); showToast('Preorder added to cart') }}>Preorder now</button>
                       </div>
                     </div>
                   </div>
