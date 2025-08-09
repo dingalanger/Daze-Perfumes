@@ -26,17 +26,31 @@ export default function CheckoutPage() {
     return () => window.removeEventListener('cart:update', handler)
   }, [])
 
-  const removeItem = (id: string) => {
-    const next = readCart().filter(i => i.id !== id)
+  const removeItem = (target: CartItem) => {
+    const next = readCart().filter(i => !(i.id === target.id && i.name === target.name))
     writeCart(next)
     setItems(next)
   }
 
-  const handleCheckout = async () => {
-    const res = await fetch('/api/checkout/session', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ items }) })
-    if (!res.ok) return
-    const { url } = await res.json()
-    if (url) window.location.href = url
+  const setQuantity = (target: CartItem, qty: number) => {
+    const next = [...readCart()]
+    const idx = next.findIndex(i => i.id === target.id && i.name === target.name)
+    if (idx >= 0) {
+      next[idx].quantity = Math.max(1, Math.floor(qty || 1))
+      writeCart(next)
+      setItems(next)
+    }
+  }
+
+  const changeQuantity = (target: CartItem, delta: number) => {
+    const next = [...readCart()]
+    const idx = next.findIndex(i => i.id === target.id && i.name === target.name)
+    if (idx >= 0) {
+      const current = next[idx].quantity || 1
+      next[idx].quantity = Math.max(1, current + delta)
+      writeCart(next)
+      setItems(next)
+    }
   }
 
   const subtotal = items.reduce((s, i) => s + i.price * (i.quantity || 1), 0)
@@ -59,10 +73,21 @@ export default function CheckoutPage() {
                     <div key={item.id+item.name} className="flex items-center justify-between border-b border-white/10 pb-4">
                       <div>
                         <p className="font-medium text-white">{item.name}</p>
-                        <p className="text-sm text-white/50">Qty {item.quantity || 1}</p>
+                        <div className="flex items-center gap-2 mt-1">
+                          <span className="text-sm text-white/50">Qty</span>
+                          <button aria-label="Decrease" className="px-2 py-1 border border-white/20 text-white/80 hover:text-white" onClick={() => changeQuantity(item, -1)}>-</button>
+                          <input
+                            type="number"
+                            min={1}
+                            value={item.quantity || 1}
+                            onChange={(e) => setQuantity(item, parseInt(e.target.value || '1'))}
+                            className="w-16 bg-neutral-900 border border-white/20 text-white text-center px-2 py-1"
+                          />
+                          <button aria-label="Increase" className="px-2 py-1 border border-white/20 text-white/80 hover:text-white" onClick={() => changeQuantity(item, 1)}>+</button>
+                        </div>
                       </div>
                       <div className="flex items-center gap-4">
-                        <button className="text-sm text-white/60 hover:text-white underline" onClick={() => removeItem(item.id)}>Remove</button>
+                        <button className="text-sm text-white/60 hover:text-white underline" onClick={() => removeItem(item)}>Remove</button>
                         <span className="font-medium text-white">${(item.price * (item.quantity || 1)).toFixed(2)}</span>
                       </div>
                     </div>
@@ -88,7 +113,12 @@ export default function CheckoutPage() {
                   <span className="text-white">${subtotal.toFixed(2)}</span>
                 </div>
               </div>
-              <button type="button" onClick={handleCheckout} className="btn-primary w-full mt-6">Preorder</button>
+              <button type="button" onClick={async () => {
+                const res = await fetch('/api/checkout/session', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ items }) })
+                if (!res.ok) return
+                const { url } = await res.json()
+                if (url) window.location.href = url
+              }} className="btn-primary w-full mt-6">Preorder</button>
               <p className="text-xs text-white/50 mt-2">Payments handled by Stripe. You’ll enter your information on the secure Stripe page.</p>
             </aside>
           </div>
