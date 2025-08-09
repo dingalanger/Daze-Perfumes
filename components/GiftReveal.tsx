@@ -11,10 +11,9 @@ export default function GiftReveal() {
   const handleClick = () => {
     if (!isOpen) {
       setIsOpen(true)
-      // trigger confetti burst briefly
+      // trigger confetti burst briefly from near bottle area (approx 45% from top)
       setTimeout(() => setBurst((b) => b + 1), 50)
-      // auto-stop after ~2.5s by toggling isOpen remains true but Confetti key changes only once
-      setTimeout(() => setBurst((b) => b + 1), 2500)
+      setTimeout(() => setBurst((b) => b + 1), 1800)
     } else {
       setIsOpen(false)
     }
@@ -22,8 +21,7 @@ export default function GiftReveal() {
 
   return (
     <div className="relative flex flex-col items-center justify-center mt-10">
-      {/* Confetti: full-screen, gravity-driven via CSS; remount with key to restart and disappear */}
-      {isOpen && <Confetti key={burst} fullScreen density={120} speed={1.2} variant="overlay" />}
+      {isOpen && <Confetti key={burst} fullScreen density={100} speed={1.2} originYPercent={45} variant="overlay" />}
 
       <button
         onClick={handleClick}
@@ -31,7 +29,6 @@ export default function GiftReveal() {
         aria-expanded={isOpen}
         aria-label={isOpen ? 'Close gift' : 'Open gift'}
       >
-        {/* Box base */}
         <div className={`gift-box ${isOpen ? 'open' : ''}`}>
           <div className="gift-body">
             <span className="gift-ribbon-vertical" />
@@ -43,11 +40,10 @@ export default function GiftReveal() {
           </div>
         </div>
 
-        {/* Bottle reveal */}
         <div className={`bottle ${isOpen ? 'reveal' : ''}`} aria-hidden={!isOpen}>
           <div className="bottle-neck" />
           <div className="bottle-body">
-            <div className="bottle-label">DAZE</div>
+            <div className="bottle-label font-serif text-black/90 tracking-widest text-center">DAZE</div>
           </div>
           <div className="bottle-cap" />
         </div>
@@ -57,12 +53,7 @@ export default function GiftReveal() {
         </div>
       </button>
 
-      <button
-        onClick={() => setShowHint(true)}
-        className="mt-6 btn-outline-light"
-      >
-        Reveal next hint
-      </button>
+      <button onClick={() => setShowHint(true)} className="mt-6 btn-outline-light">Reveal next hint</button>
 
       {showHint && (
         <p className="mt-4 text-white/80 text-center max-w-2xl">
