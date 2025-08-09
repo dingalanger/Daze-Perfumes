@@ -28,6 +28,10 @@
   .badge-gold-metallic { background: linear-gradient(180deg, #fff4c1, #efc95a 40%, #b8871a 60%, #ffe187); color: #1a1a1a; border: 1px solid rgba(234,196,89,0.45); }
   .badge-gold-minimal { @apply text-black; background: rgba(234,196,89,0.2); border: 1px solid rgba(234,196,89,0.45); }
 
+  /* Bottle label centering */
+  .bottle-body { @apply relative flex items-end justify-center; }
+  .bottle-label { @apply absolute -mb-4 left-1/2 -translate-x-1/2 px-3 py-1 bg-white text-black rounded-sm; }
+
   /* Text reveal */
   .reveal-text { position: relative; overflow: hidden; }
   .reveal-text::after { content: ''; position: absolute; inset: 0; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.75), transparent); transform: translateX(-100%); animation: sheen 1.2s ease 0.4s forwards; }

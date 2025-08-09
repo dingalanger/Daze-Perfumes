@@ -1,28 +1,15 @@
 'use client'
 
 import React, { useState } from 'react'
-import Confetti from './Confetti'
 
 export default function GiftReveal() {
   const [isOpen, setIsOpen] = useState(false)
-  const [burst, setBurst] = useState(0)
   const [showHint, setShowHint] = useState(false)
 
-  const handleClick = () => {
-    if (!isOpen) {
-      setIsOpen(true)
-      // trigger confetti burst briefly from near bottle area (approx 45% from top)
-      setTimeout(() => setBurst((b) => b + 1), 50)
-      setTimeout(() => setBurst((b) => b + 1), 1800)
-    } else {
-      setIsOpen(false)
-    }
-  }
+  const handleClick = () => setIsOpen((v) => !v)
 
   return (
     <div className="relative flex flex-col items-center justify-center mt-10">
-      {isOpen && <Confetti key={burst} fullScreen density={100} speed={1.2} originYPercent={45} variant="overlay" />}
-
       <button
         onClick={handleClick}
         className="group relative gift-container focus:outline-none"
