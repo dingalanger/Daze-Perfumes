@@ -28,33 +28,9 @@
   .badge-gold-metallic { background: linear-gradient(180deg, #fff4c1, #efc95a 40%, #b8871a 60%, #ffe187); color: #1a1a1a; border: 1px solid rgba(234,196,89,0.45); }
   .badge-gold-minimal { @apply text-black; background: rgba(234,196,89,0.2); border: 1px solid rgba(234,196,89,0.45); }
 
-  /* Bottle label centering */
-  .bottle-body { @apply relative flex items-end justify-center; }
-  .bottle-label { @apply absolute -mb-4 left-1/2 -translate-x-1/2 px-3 py-1 bg-white text-black rounded-sm; }
-
-  /* Text reveal */
-  .reveal-text { position: relative; overflow: hidden; }
-  .reveal-text::after { content: ''; position: absolute; inset: 0; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.75), transparent); transform: translateX(-100%); animation: sheen 1.2s ease 0.4s forwards; }
-  @keyframes sheen { to { transform: translateX(100%); } }
-
-  /* Gift styles */
-  .gift-container { @apply mt-20 md:mt-24; }
-  .gift-box { @apply relative w-48 h-40 mx-auto; }
-  .gift-body { @apply absolute bottom-0 left-0 right-0 h-32 bg-neutral-900 border border-white/10; }
-  .gift-lid { @apply absolute -top-2 left-0 right-0 h-12 bg-neutral-800 border border-white/10 origin-bottom; transform: translateY(0) rotate(0); transition: transform 600ms ease; }
-  .gift-box.open .gift-lid { transform: translateY(-18px) rotate(-12deg); }
-  .gift-ribbon-vertical { @apply absolute top-0 bottom-0 left-1/2 w-3 bg-white; transform: translateX(-50%); }
-  .gift-ribbon-horizontal { @apply absolute left-0 right-0 top-1/2 h-3 bg-white; transform: translateY(-50%); }
-  .gift-bow-left { @apply absolute -top-4 left-1/2 w-6 h-6 bg-white rounded-full; transform: translateX(-90%) scale(1); }
-  .gift-bow-right { @apply absolute -top-4 left-1/2 w-6 h-6 bg-white rounded-full; transform: translateX(-10%) scale(1); }
-
-  /* Bottle */
-  .bottle { @apply absolute -top-8 left-1/2 opacity-0 pointer-events-none; transform: translateX(-50%) translateY(10px) scale(0.9); transition: all 700ms cubic-bezier(0.19, 1, 0.22, 1); }
-  .bottle.reveal { @apply opacity-100; transform: translateX(-50%) translateY(-40px) scale(1); }
-  .bottle-body { @apply w-24 h-32 bg-gradient-to-b from-neutral-300 to-neutral-100 rounded-b-xl rounded-t-md mx-auto relative flex items-end justify-center; box-shadow: inset 0 0 10px rgba(255,255,255,0.5); }
-  .bottle-neck { @apply w-8 h-6 bg-neutral-200 mx-auto rounded-t-md; }
-  .bottle-cap { @apply w-10 h-3 bg-neutral-400 mx-auto rounded-b-sm -mt-1; }
-  .bottle-label { @apply mb-4 px-3 py-1 rounded-sm text-xs font-semibold tracking-widest; background: linear-gradient(135deg, #FFFFFF, #FFFFFF, #CCCCCC); color: #1a1a1a; box-shadow: 0 0 10px rgba(255,255,255,0.2); }
+  /* Bottle visuals */
+  .bottle-body { @apply relative w-24 h-32 bg-gradient-to-b from-neutral-300 to-neutral-100 rounded-b-xl rounded-t-md mx-auto flex items-end justify-center; box-shadow: inset 0 0 10px rgba(255,255,255,0.5); }
+  .bottle-label { @apply absolute bottom-4 left-1/2 -translate-x-1/2 px-3 py-1 bg-white text-black rounded-sm; }
 }
 
 @layer utilities { .text-balance { text-wrap: balance; } }
