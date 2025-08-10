@@ -43,7 +43,7 @@ export default function FeaturedProducts() {
                 <div className={`relative rounded-lg overflow-hidden card-hover ${isStallion ? 'card-gold-special' : 'bg-neutral-900'}`}>
                   <Link href={`/product/${product.slug}`} className="block relative h-80 bg-neutral-900">
                     {product.image ? (
-                      <Image src={product.image} alt={product.name} fill className="object-cover opacity-90 transition-opacity group-hover:opacity-100" />
+                      <Image src={product.image} alt={product.name} fill className={`object-cover opacity-90 transition-opacity group-hover:opacity-100 ${isStallion ? 'object-[50%_45%]' : ''}`} />
                     ) : (
                       <div className="absolute inset-0 flex items-center justify-center">
                         <div className={`w-32 h-32 ${isStallion ? 'bg-white/10 border-white/30' : 'bg-white/5 border-white/10'} border rounded-full flex items-center justify-center`}>

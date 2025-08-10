@@ -26,7 +26,7 @@
   .card-hover { @apply transition-all duration-300 hover:scale-105 hover:shadow-2xl; }
   .card-gold-special { @apply border border-white/10; background: radial-gradient(120% 120% at 0% 0%, rgba(234,196,89,0.12), transparent 60%), radial-gradient(120% 120% at 100% 100%, rgba(255,215,120,0.12), transparent 60%), #111111; box-shadow: 0 0 0 1px rgba(234,196,89,0.25), 0 8px 28px rgba(234,196,89,0.18), inset 0 0 40px rgba(234,196,89,0.06); }
   .badge-gold-metallic { background: linear-gradient(180deg, #fff4c1, #efc95a 40%, #b8871a 60%, #ffe187); color: #1a1a1a; border: 1px solid rgba(234,196,89,0.45); }
-  .badge-gold-minimal { @apply text-black; background: rgba(234,196,89,0.2); border: 1px solid rgba(234,196,89,0.45); }
+  .badge-gold-minimal { @apply text-white; background: rgba(234,196,89,0.35); border: 1px solid rgba(234,196,89,0.55); }
 
   /* Bottle label centering */
   .bottle-body { @apply relative flex items-end justify-center; }
@@ -57,7 +57,7 @@
   .bottle-label { @apply mb-4 px-3 py-1 rounded-sm text-xs font-semibold tracking-widest; background: linear-gradient(135deg, #FFFFFF, #FFFFFF, #CCCCCC); color: #1a1a1a; box-shadow: 0 0 10px rgba(255,255,255,0.2); }
 }
 
-@layer utilities { .text-balance { text-wrap: balance; } }
+@layer utilities { .text-balance { text-wrap: balance; }}
 
 /* Animations */
 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
