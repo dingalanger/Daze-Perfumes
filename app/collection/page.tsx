@@ -70,7 +70,7 @@ export default function CollectionPage() {
                     {/* Product Image */}
                     <Link href={`/product/${product.slug}`} className="block relative h-80 bg-neutral-900">
                       {product.image ? (
-                        <Image src={product.image} alt={product.name} fill className={`object-cover opacity-90 transition-opacity group-hover:opacity-100 ${isStallion ? 'object-[50%_38%]' : ''}`} />
+                        <Image src={product.image} alt={product.name} fill className={`object-cover opacity-90 transition-opacity group-hover:opacity-100 ${isStallion ? 'object-[50%_28%]' : ''}`} />
                       ) : (
                         <div className="absolute inset-0 flex items-center justify-center">
                           <div className={`w-32 h-32 ${isStallion ? 'bg-white/10 border-white/30' : 'bg-white/10 border-white/20'} rounded-full flex items-center justify-center border`}>
