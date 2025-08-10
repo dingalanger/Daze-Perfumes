@@ -16,22 +16,40 @@ const NOTES = [
   { id: 'musk', label: 'Warm Musk', family: 'musk' },
 ]
 
-// Deterministic daily combo using date seed
-function dailyIndex(max: number) {
+const FAMILY_COLORS: Record<string, string> = {
+  sweet: '#F7B500',
+  bitter: '#8BA1B3',
+  comfort: '#EAD7B7',
+  floral: '#FF89B3',
+  spice: '#E06C00',
+  leather: '#915C39',
+  musk: '#C0C0C0',
+}
+
+// Deterministic daily target fragrance
+function dailyFragrance() {
+  const choices = ['pear', 'boba', 'stallion', 'rice'] as const
   const d = new Date()
-  const seed = parseInt(`${d.getFullYear()}${d.getMonth()+1}${d.getDate()}`)
-  let x = Math.sin(seed) * 10000
-  return () => Math.floor((x = Math.sin(x) * 10000) % max + max) % max
+  const idx = (d.getFullYear() + d.getMonth() + d.getDate()) % choices.length
+  return choices[idx]
+}
+
+const DAILY_COMBOS: Record<string, [string, string, string]> = {
+  pear: ['pear', 'vanilla', 'musk'],
+  boba: ['black-tea', 'vanilla', 'jasmine-rice'],
+  stallion: ['osmanthus', 'leather', 'musk'],
+  rice: ['jasmine-rice', 'vanilla', 'black-tea'],
 }
 
 function selectDailyTarget() {
-  const rand = dailyIndex(NOTES.length)
-  const pick = () => NOTES[rand()]
-  // Top / Heart / Base must be distinct
-  const top = pick()
-  let heart = pick(); while (heart.id === top.id) heart = pick()
-  let base = pick(); while (base.id === top.id || base.id === heart.id) base = pick()
-  return { top, heart, base }
+  const id = dailyFragrance()
+  const [top, heart, base] = DAILY_COMBOS[id]
+  return {
+    id,
+    top: NOTES.find(n => n.id === top)!,
+    heart: NOTES.find(n => n.id === heart)!,
+    base: NOTES.find(n => n.id === base)!,
+  }
 }
 
 function feedbackFor(selection: string[]) {
@@ -50,6 +68,7 @@ export default function AlchemyPage() {
   const target = useMemo(() => selectDailyTarget(), [])
   const [flask, setFlask] = useState<string[]>([])
   const [message, setMessage] = useState<string>('Drag three notes into the flask in Top → Heart → Base order.')
+  const [pour, setPour] = useState<{ color: string; key: number } | null>(null)
   const dropRef = useRef<HTMLDivElement | null>(null)
   const solved = flask.length === 3 && flask[0] === target.top.id && flask[1] === target.heart.id && flask[2] === target.base.id
 
@@ -58,7 +77,10 @@ export default function AlchemyPage() {
     const id = e.dataTransfer.getData('text/plain')
     if (!id) return
     if (flask.length >= 3) return
+    const fam = NOTES.find(n => n.id === id)?.family || 'sweet'
+    setPour({ color: FAMILY_COLORS[fam], key: Date.now() })
     setFlask([...flask, id])
+    setTimeout(() => setPour(null), 700)
   }
 
   const onDragStart = (e: React.DragEvent, id: string) => {
@@ -76,13 +98,16 @@ export default function AlchemyPage() {
 
   const reset = () => { setFlask([]); setMessage('Drag three notes into the flask in Top → Heart → Base order.') }
 
+  const level = Math.min(3, flask.length) / 3
+
   return (
     <main className="min-h-screen pt-20 bg-black">
       <Header />
       <section className="section-padding">
         <div className="container-custom max-w-4xl">
-          <h1 className="text-3xl md:text-4xl font-serif font-bold text-white mb-6">Scent Alchemy</h1>
-          <p className="text-white/80 mb-6">Apprentice perfumer: assemble the Top, Heart, and Base to match today\'s secret accord. Drag notes into the flask; submit to get feedback like “too floral” or “needs sweetness.” The correct combo changes daily.</p>
+          <h1 className="text-3xl md:text-4xl font-serif font-bold text-white mb-2">Scent Alchemy</h1>
+          <p className="text-white/80 mb-4">Today's target fragrance: <span className="font-semibold capitalize">{target.id}</span>. Assemble Top, Heart, Base to match.</p>
+          <p className="text-white/70 mb-6">Drag notes into the flask; submit to get feedback like “too floral” or “needs sweetness.” The correct combo changes daily.</p>
 
           <div className="grid md:grid-cols-3 gap-6 items-start">
             {/* Notes palette */}
@@ -100,11 +125,26 @@ export default function AlchemyPage() {
             {/* Flask drop area */}
             <div className="md:col-span-2">
               <h2 className="text-white font-semibold mb-3">Your Flask</h2>
-              <div ref={dropRef} onDragOver={(e) => e.preventDefault()} onDrop={onDrop} className="h-56 border border-white/20 bg-neutral-900 text-white flex flex-col items-center justify-center gap-3 p-4">
-                {flask.length === 0 && <span className="text-white/50">Drop Top, then Heart, then Base</span>}
-                {flask.map((id, i) => (
-                  <div key={i} className="px-3 py-2 bg-white/10 border border-white/20 w-full max-w-sm text-center">{i===0?'Top':i===1?'Heart':'Base'}: {NOTES.find(n => n.id===id)?.label}</div>
-                ))}
+              <div ref={dropRef} onDragOver={(e) => e.preventDefault()} onDrop={onDrop} className="relative h-72 text-white flex items-center justify-center">
+                {/* Flask outline via clip-path */}
+                <div className="relative w-72 h-full">
+                  <div className="absolute inset-0 clip-flask border border-white/30"></div>
+                  {/* Liquid fill */}
+                  <div className="absolute bottom-0 left-0 right-0 clip-flask overflow-hidden">
+                    <div className="w-full transition-[height] duration-700" style={{ height: `${Math.max(6, level*100)}%`, background: 'linear-gradient(180deg, rgba(255,255,255,0.85), rgba(255,255,255,0.4))' }} />
+                  </div>
+                  {/* Pour stream */}
+                  {pour && (
+                    <div key={pour.key} className="absolute -top-10 left-1/2 -translate-x-1/2 h-10 w-3 rounded-full animate-pour" style={{ background: pour.color }} />
+                  )}
+                  {/* Labels */}
+                  {flask.map((id, i) => (
+                    <div key={i} className="absolute left-1/2 -translate-x-1/2 text-xs text-white/80" style={{ bottom: `${10 + i*18}%` }}>{i===0?'Top':i===1?'Heart':'Base'}: {NOTES.find(n=>n.id===id)?.label}</div>
+                  ))}
+                  {flask.length === 0 && <span className="absolute inset-0 flex items-center justify-center text-white/50">Drop Top, then Heart, then Base</span>}
+                </div>
+                {/* pour spout indicator */}
+                <div className="absolute -top-6 left-1/2 -translate-x-1/2 w-6 h-6 border-t border-x border-white/40 rotate-45"></div>
               </div>
 
               <div className="mt-4 flex gap-3">
@@ -124,6 +164,18 @@ export default function AlchemyPage() {
         </div>
       </section>
       <Footer />
+      <style jsx global>{`
+        .clip-flask {
+          clip-path: polygon(45% 0%, 55% 0%, 60% 8%, 64% 15%, 70% 28%, 85% 90%, 15% 90%, 30% 28%, 36% 15%, 40% 8%);
+          border-radius: 6px;
+        }
+        @keyframes pourDown {
+          0% { transform: translate(-50%, -120%); opacity: 0.0; }
+          20% { opacity: 1; }
+          100% { transform: translate(-50%, 0%); opacity: 0.9; }
+        }
+        .animate-pour { animation: pourDown 0.7s ease-in-out; }
+      `}</style>
     </main>
   )
 } 
