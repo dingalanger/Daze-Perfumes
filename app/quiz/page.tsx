@@ -11,39 +11,75 @@ type ScoreMap = Partial<Record<string, number>>
 // Simple scoring: each answer adds points to one or more fragrances
 const QUESTIONS: { q: string; answers: { label: string; scores: ScoreMap }[] }[] = [
   {
-    q: "Pick a cozy moment:",
+    q: "At a party, you're most likely...",
     answers: [
-      { label: "Warm bowl of jasmine rice at home", scores: { rice: 2 } },
-      { label: "Fresh pear in the orchard", scores: { pear: 2 } },
-      { label: "Milk tea run with friends", scores: { boba: 2 } },
-      { label: "Night ride under city lights", scores: { stallion: 2 } },
+      { label: "Having sweet 1‑on‑1 chats in a cozy corner", scores: { pear: 2 } },
+      { label: "Getting everyone to dance and try games", scores: { boba: 2 } },
+      { label: "Making sure your friends are good and the plan runs smooth", scores: { stallion: 2 } },
+      { label: "Trying something wild and getting people hyped about it", scores: { rice: 2 } },
     ],
   },
   {
-    q: "Your ideal vibe:",
+    q: "Your ideal weekend vibe:",
     answers: [
-      { label: "Minimal, soft, comforting", scores: { rice: 2, pear: 1 } },
-      { label: "Fresh, bright, juicy", scores: { pear: 2, rice: 1 } },
-      { label: "Sweet, creamy, addictive", scores: { boba: 2 } },
-      { label: "Bold, leathery, confident", scores: { stallion: 2 } },
+      { label: "Slow morning, baking/reading, simple pleasures", scores: { pear: 2 } },
+      { label: "Spontaneous city crawl, karaoke, late‑night desserts", scores: { boba: 2 } },
+      { label: "Early workout/hike, crossing goals off your list", scores: { stallion: 2 } },
+      { label: "Pop‑up markets, niche cafés, discovering bold new spots", scores: { rice: 2 } },
     ],
   },
   {
-    q: "Pick a note:",
+    q: "The compliment you love to hear:",
     answers: [
-      { label: "Osmanthus", scores: { stallion: 2 } },
-      { label: "Asian Pear", scores: { pear: 2 } },
-      { label: "Black Tea", scores: { boba: 2 } },
-      { label: "Jasmine Rice", scores: { rice: 2 } },
+      { label: "You're so sweet and calming", scores: { pear: 2 } },
+      { label: "You're the most fun person to be around", scores: { boba: 2 } },
+      { label: "You're reliable, loyal, and driven", scores: { stallion: 2 } },
+      { label: "Your style is so unique and bold", scores: { rice: 2 } },
     ],
   },
   {
-    q: "Date plan:",
+    q: "Pick a color palette:",
     answers: [
-      { label: "Farmers market + picnic", scores: { pear: 2 } },
-      { label: "Late‑night dessert spot", scores: { boba: 2 } },
-      { label: "Gallery stroll + espresso", scores: { rice: 2 } },
-      { label: "Concert + rooftop", scores: { stallion: 2 } },
+      { label: "Soft pastels and creams", scores: { pear: 2 } },
+      { label: "Bright, playful tones", scores: { boba: 2 } },
+      { label: "Deep neutrals with leather accents", scores: { stallion: 2 } },
+      { label: "High‑contrast, statement colors", scores: { rice: 2 } },
+    ],
+  },
+  {
+    q: "Decision style:",
+    answers: [
+      { label: "Go with the flow and keep it mellow", scores: { pear: 2 } },
+      { label: "Follow the excitement and make it fun", scores: { boba: 2 } },
+      { label: "Set a goal and execute with focus", scores: { stallion: 2 } },
+      { label: "Break the mold and do it differently", scores: { rice: 2 } },
+    ],
+  },
+  {
+    q: "Music energy right now:",
+    answers: [
+      { label: "Mellow R&B / lo‑fi", scores: { pear: 2 } },
+      { label: "Upbeat pop / EDM", scores: { boba: 2 } },
+      { label: "Motivational hip‑hop / classic rock", scores: { stallion: 2 } },
+      { label: "Indie / experimental", scores: { rice: 2 } },
+    ],
+  },
+  {
+    q: "Travel habit:",
+    answers: [
+      { label: "Slow towns, cafés, simple joys", scores: { pear: 2 } },
+      { label: "Group trips, beach days, festivals", scores: { boba: 2 } },
+      { label: "Planned treks and challenges", scores: { stallion: 2 } },
+      { label: "Solo city hunts for hidden galleries and zines", scores: { rice: 2 } },
+    ],
+  },
+  {
+    q: "Dessert choice:",
+    answers: [
+      { label: "Fruit tart / pear sorbet", scores: { pear: 2 } },
+      { label: "Boba milk‑tea float", scores: { boba: 2 } },
+      { label: "Dark chocolate with caramel", scores: { stallion: 2 } },
+      { label: "Mochi flight / unexpected flavor mashups", scores: { rice: 2 } },
     ],
   },
 ]
