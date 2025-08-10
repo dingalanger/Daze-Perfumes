@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { ArrowRight, Sparkles } from 'lucide-react'
+import { ArrowRight, Sparkles, ChevronDown } from 'lucide-react'
 
 export default function HeroWithImage() {
   return (
@@ -69,10 +69,8 @@ export default function HeroWithImage() {
       </div>
 
       {/* Scroll Indicator */}
-      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-fade-in-slow">
-        <div className="w-6 h-10 border-2 border-white rounded-full flex justify-center">
-          <div className="w-1 h-3 bg-white rounded-full mt-2 animate-bounce"></div>
-        </div>
+      <div className="absolute bottom-6 left-1/2 -translate-x-1/2 animate-fade-in-slow text-white">
+        <ChevronDown size={36} className="animate-bounce" />
       </div>
     </section>
   )
