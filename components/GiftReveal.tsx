@@ -118,7 +118,7 @@ export default function GiftReveal() {
 
   return (
     <div className="relative flex flex-col items-center justify-center mt-10">
-      <canvas ref={canvasRef} className="pointer-events-none absolute -z-10" style={{ top: 0 }} />
+      <canvas ref={canvasRef} className="pointer-events-none absolute inset-0 z-10" />
 
       <button
         onClick={handleClick}

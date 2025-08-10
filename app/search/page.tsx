@@ -3,20 +3,20 @@
 import React, { useMemo, useState } from 'react'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
-
-const demoProducts = [
-  { id: 1, name: 'Golden Orchid', notes: ['Vanilla', 'Orchid', 'Amber'] },
-  { id: 2, name: 'Jade Garden', notes: ['Green Tea', 'Jasmine', 'Bamboo'] },
-  { id: 3, name: 'Silk Road', notes: ['Cardamom', 'Sandalwood', 'Musk'] },
-  { id: 4, name: 'Moon Palace', notes: ['Osmanthus', 'Honey', 'White Tea'] },
-]
+import Link from 'next/link'
+import Image from 'next/image'
+import { products as allProducts } from '@/lib/products'
 
 export default function SearchPage() {
   const [query, setQuery] = useState('')
   const results = useMemo(() => {
     const q = query.trim().toLowerCase()
-    if (!q) return demoProducts
-    return demoProducts.filter(p => p.name.toLowerCase().includes(q) || p.notes.some(n => n.toLowerCase().includes(q)))
+    if (!q) return allProducts
+    return allProducts.filter(p =>
+      p.name.toLowerCase().includes(q) ||
+      p.notes.some(n => n.toLowerCase().includes(q)) ||
+      p.category.toLowerCase().includes(q)
+    )
   }, [query])
 
   return (
@@ -34,10 +34,13 @@ export default function SearchPage() {
 
           <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {results.map(p => (
-              <div key={p.id} className="p-6 border border-white/10 bg-neutral-900 text-white">
-                <h3 className="text-lg font-semibold mb-2">{p.name}</h3>
+              <Link key={p.id} href={`/product/${p.slug}`} className="group p-4 border border-white/10 bg-neutral-900 text-white hover:border-white/30 transition-colors">
+                <div className="relative h-40 mb-4 bg-neutral-800">
+                  {p.image && <Image src={p.image} alt={p.name} fill className="object-cover" />}
+                </div>
+                <h3 className="text-lg font-semibold mb-1">{p.name}</h3>
                 <p className="text-sm text-white/60">Notes: {p.notes.join(', ')}</p>
-              </div>
+              </Link>
             ))}
           </div>
         </div>
