@@ -4,6 +4,7 @@ import React, { useMemo, useState } from 'react'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import Link from 'next/link'
+import Image from 'next/image'
 import { Crown } from 'lucide-react'
 import { products as allProducts } from '@/lib/products'
 
@@ -67,18 +68,22 @@ export default function CollectionPage() {
                 <div key={product.id} className="group animate-slide-up" style={{ animationDelay: `${index * 0.1}s` }}>
                   <div className={`relative rounded-lg overflow-hidden card-hover border border-white/10 ${isStallion ? 'card-gold-special' : 'bg-neutral-900'}`}>
                     {/* Product Image */}
-                    <Link href={`/product/${product.slug}`} className={`block relative h-80 ${isStallion ? 'bg-neutral-900' : 'bg-neutral-800'}`}>
-                      <div className="absolute inset-0 flex items-center justify-center">
-                        <div className={`w-32 h-32 ${isStallion ? 'bg-white/10 border-white/30' : 'bg-white/10 border-white/20'} rounded-full flex items-center justify-center border`}>
-                          <span className="text-white text-2xl font-cursive">{product.name.split(' ')[0]}</span>
+                    <Link href={`/product/${product.slug}`} className="block relative h-80 bg-neutral-900">
+                      {product.image ? (
+                        <Image src={product.image} alt={product.name} fill className="object-cover opacity-90 transition-opacity group-hover:opacity-100" />
+                      ) : (
+                        <div className="absolute inset-0 flex items-center justify-center">
+                          <div className={`w-32 h-32 ${isStallion ? 'bg-white/10 border-white/30' : 'bg-white/10 border-white/20'} rounded-full flex items-center justify-center border`}>
+                            <span className="text-white text-2xl font-cursive">{product.name.split(' ')[0]}</span>
+                          </div>
                         </div>
-                      </div>
+                      )}
                     </Link>
 
                     {/* Category Badge */}
                     <div className="absolute top-4 left-4 flex items-center gap-2">
-                      {isStallion && <Crown size={16} className="text-daze-gold" />}
-                      <span className={`px-3 py-1 text-xs font-medium rounded-full ${isStallion ? 'badge-gold-minimal' : 'bg-white/10 text-white'} border border-white/20`}>
+                      {isStallion && <Crown size={16} className="text-daze-gold drop-shadow-[0_1px_2px_rgba(0,0,0,0.6)]" />}
+                      <span className={`px-3 py-1 text-xs font-medium rounded-full backdrop-blur-sm ${isStallion ? 'badge-gold-minimal shadow-[0_2px_8px_rgba(0,0,0,0.3)]' : 'bg-black/70 text-white border border-white/20'}`}>
                         {isStallion ? 'Zodiac — Limited Edition' : product.category}
                       </span>
                     </div>

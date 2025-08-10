@@ -55,8 +55,8 @@ export default function FeaturedProducts() {
 
                   {/* Category Badge */}
                   <div className="absolute top-4 left-4 flex items-center gap-2">
-                    {isStallion && <Crown size={16} className="text-daze-gold" />}
-                    <span className={`px-3 py-1 text-xs font-medium rounded-full ${isStallion ? 'badge-gold-minimal' : 'bg-white/10 text-white'}`}>{isStallion ? 'Zodiac — Limited Edition' : product.category}</span>
+                    {isStallion && <Crown size={16} className="text-daze-gold drop-shadow-[0_1px_2px_rgba(0,0,0,0.6)]" />}
+                    <span className={`px-3 py-1 text-xs font-medium rounded-full backdrop-blur-sm ${isStallion ? 'badge-gold-minimal shadow-[0_2px_8px_rgba(0,0,0,0.3)]' : 'bg-black/70 text-white border border-white/20'}`}>{isStallion ? 'Zodiac — Limited Edition' : product.category}</span>
                   </div>
 
                   <div className="p-6">
