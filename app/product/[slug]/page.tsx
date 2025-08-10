@@ -35,8 +35,10 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
   const [qty, setQty] = useState<number>(1)
   if (!product) return <div className="min-h-screen bg-black text-white flex items-center justify-center">Not found</div>
 
+  const price = size === '100ml' ? 150 : product.price
+
   const add = () => {
-    writeCartItem({ id: product.id, name: `${product.name} ${size}`, price: product.price, quantity: qty })
+    writeCartItem({ id: product.id, name: `${product.name} ${size}`, price, quantity: qty })
     showToast(`${product.name} preorder added to cart`)
   }
 
@@ -56,7 +58,7 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
           {/* Product info */}
           <div>
             <h1 className="text-3xl md:text-4xl font-serif font-bold text-white mb-3">{product.name} Eau De Parfum</h1>
-            <p className="text-white/80 mb-6">${product.price}.00</p>
+            <p className="text-white/80 mb-6">${price}.00</p>
 
             {/* Size and quantity */}
             <div className="grid grid-cols-2 gap-4 mb-6">
