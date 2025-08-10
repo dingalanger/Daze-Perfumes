@@ -5,6 +5,7 @@ import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import Link from 'next/link'
 import { products } from '@/lib/products'
+import Image from 'next/image'
 
 type ScoreMap = Partial<Record<string, number>>
 
@@ -42,7 +43,7 @@ const QUESTIONS: { q: string; answers: { label: string; scores: ScoreMap }[] }[]
     answers: [
       { label: "Soft pastels and creams", scores: { pear: 2 } },
       { label: "Bright, playful tones", scores: { boba: 2 } },
-      { label: "Deep neutrals with leather accents", scores: { stallion: 2 } },
+      { label: "You dress mostly with neutral colors", scores: { stallion: 2 } },
       { label: "High‑contrast, statement colors", scores: { rice: 2 } },
     ],
   },
@@ -113,13 +114,24 @@ export default function QuizPage() {
     return prod || null
   }, [step, scores])
 
+  const pairingProducts = useMemo(() => {
+    if (!result) return [] as typeof products
+    const names = PAIRINGS[result.id] || []
+    return products.filter(p => names.includes(p.name))
+  }, [result])
+
   return (
     <main className="min-h-screen pt-20 bg-black">
       <Header />
 
       <section className="section-padding">
         <div className="container-custom max-w-3xl">
-          <h1 className="text-4xl font-serif font-bold text-white mb-8">Couples Quiz</h1>
+          <h1 className="text-4xl font-serif font-bold text-white mb-8">Games</h1>
+
+          <div className="mb-8 grid sm:grid-cols-2 gap-3">
+            <button className="w-full px-4 py-3 border border-white/20 text-white hover:bg-white hover:text-black transition" onClick={() => { setStep(0); setScores({ pear: 0, boba: 0, rice: 0, stallion: 0 }) }}>Take the Couples Quiz</button>
+            <Link href="#" className="w-full text-center px-4 py-3 border border-white/20 text-white hover:bg-white hover:text-black transition opacity-60 pointer-events-none">Perfume Making (coming soon)</Link>
+          </div>
 
           {step < QUESTIONS.length ? (
             <div className="bg-neutral-900 border border-white/10 p-6">
@@ -136,16 +148,27 @@ export default function QuizPage() {
           ) : result ? (
             <div className="bg-neutral-900 border border-white/10 p-6">
               <h2 className="text-2xl font-serif font-bold text-white mb-2">Your match: {result.name}</h2>
-              <p className="text-white/80 mb-4">{result.shortDescription}</p>
-              <Link href={`/product/${result.slug}`} className="btn-outline-light inline-block">View {result.name}</Link>
-
-              <div className="mt-8">
-                <h3 className="text-lg font-semibold text-white mb-2">Pairs well with</h3>
-                <ul className="list-disc pl-6 text-white/80">
-                  {(PAIRINGS[result.id] || []).map(name => (
-                    <li key={name}>{name}</li>
-                  ))}
-                </ul>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
+                <div>
+                  <div className="relative h-56 bg-neutral-800 mb-4">
+                    {result.image && <Image src={result.image} alt={result.name} fill className="object-cover" />}
+                  </div>
+                  <p className="text-white/80 mb-4">{result.shortDescription}</p>
+                  <Link href={`/product/${result.slug}`} className="btn-outline-light inline-block">View {result.name}</Link>
+                </div>
+                <div>
+                  <h3 className="text-lg font-semibold text-white mb-2">Pairs well with</h3>
+                  <div className="grid grid-cols-2 gap-3">
+                    {pairingProducts.map(pp => (
+                      <Link key={pp.id} href={`/product/${pp.slug}`} className="block">
+                        <div className="relative h-28 bg-neutral-800">
+                          {pp.image && <Image src={pp.image} alt={pp.name} fill className="object-cover" />}
+                        </div>
+                        <div className="mt-2 text-sm text-white/90">{pp.name}</div>
+                      </Link>
+                    ))}
+                  </div>
+                </div>
               </div>
 
               <button className="mt-8 btn-outline-light" onClick={() => { setStep(0); setScores({ pear: 0, boba: 0, rice: 0, stallion: 0 }) }}>Retake quiz</button>

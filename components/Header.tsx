@@ -41,7 +41,7 @@ export default function Header() {
           <nav className="hidden md:flex justify-center items-center space-x-10 justify-self-center">
             <Link href="/" className="text-sm font-medium tracking-wide text-white/90 hover:text-white transition-colors">Home</Link>
             <Link href="/collection" className="text-sm font-medium tracking-wide text-white/90 hover:text-white transition-colors">Collection</Link>
-            <Link href="/quiz" className="text-sm font-medium tracking-wide text-white/90 hover:text-white transition-colors">Quiz</Link>
+            <Link href="/quiz" className="text-sm font-medium tracking-wide text-white/90 hover:text-white transition-colors">Games</Link>
             <Link href="/about" className="text-sm font-medium tracking-wide text-white/90 hover:text-white transition-colors">About</Link>
             <Link href="/waitlist" className="text-sm font-medium tracking-wide text-white/90 hover:text-white transition-colors">Waitlist</Link>
           </nav>
@@ -77,7 +77,7 @@ export default function Header() {
             <nav className="flex flex-col space-y-4 text-center">
               <Link href="/" className="text-white/90 hover:text-white transition-colors">Home</Link>
               <Link href="/collection" className="text-white/90 hover:text-white transition-colors">Collection</Link>
-              <Link href="/quiz" className="text-white/90 hover:text-white transition-colors">Quiz</Link>
+              <Link href="/quiz" className="text-white/90 hover:text-white transition-colors">Games</Link>
               <Link href="/about" className="text-white/90 hover:text-white transition-colors">About</Link>
               <Link href="/waitlist" className="text-white/90 hover:text-white transition-colors">Waitlist</Link>
               <Link href="/checkout" className="text-white/90 hover:text-white transition-colors">Cart ({cartCount})</Link>
