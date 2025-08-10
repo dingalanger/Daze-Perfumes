@@ -130,7 +130,7 @@ export default function QuizPage() {
 
           <div className="mb-8 grid sm:grid-cols-2 gap-3">
             <button className="w-full px-4 py-3 border border-white/20 text-white hover:bg-white hover:text-black transition" onClick={() => { setStep(0); setScores({ pear: 0, boba: 0, rice: 0, stallion: 0 }) }}>Take the Couples Quiz</button>
-            <Link href="#" className="w-full text-center px-4 py-3 border border-white/20 text-white hover:bg-white hover:text-black transition opacity-60 pointer-events-none">Perfume Making (coming soon)</Link>
+            <Link href="/quiz/alchemy" className="w-full text-center px-4 py-3 border border-white/20 text-white hover:bg-white hover:text-black transition">Perfume Making — Scent Alchemy</Link>
           </div>
 
           {step < QUESTIONS.length ? (
