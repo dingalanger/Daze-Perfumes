@@ -1,15 +1,125 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
+
+type Particle = {
+  x: number
+  y: number
+  vx: number
+  vy: number
+  rot: number
+  vr: number
+  size: number
+  color: string
+  life: number
+}
 
 export default function GiftReveal() {
   const [isOpen, setIsOpen] = useState(false)
   const [showHint, setShowHint] = useState(false)
+  const canvasRef = useRef<HTMLCanvasElement | null>(null)
+  const rafRef = useRef<number | null>(null)
 
-  const handleClick = () => setIsOpen((v) => !v)
+  const spawnBurst = () => {
+    const canvas = canvasRef.current
+    if (!canvas) return
+    const ctx = canvas.getContext('2d')
+    if (!ctx) return
+
+    const particles: Particle[] = []
+    const { width, height } = canvas
+
+    // Emit from box center toward right with spread
+    const originX = width / 2
+    const originY = height / 2 - 30
+
+    const colors = ['#FFD166', '#06D6A0', '#EF476F', '#118AB2', '#FFFFFF']
+
+    for (let i = 0; i < 120; i++) {
+      const speed = 3 + Math.random() * 3
+      const angle = (Math.PI / 8) * (Math.random() - 0.5) // small vertical spread
+      const vx = speed * (1 + Math.random() * 0.5)
+      const vy = Math.sin(angle) * speed * (Math.random() < 0.5 ? -1 : 1)
+      particles.push({
+        x: originX,
+        y: originY,
+        vx,
+        vy,
+        rot: Math.random() * Math.PI,
+        vr: (Math.random() - 0.5) * 0.2,
+        size: 4 + Math.random() * 6,
+        color: colors[Math.floor(Math.random() * colors.length)],
+        life: 0,
+      })
+    }
+
+    let last = performance.now()
+
+    const gravity = 0.15
+    const air = 0.995
+
+    const tick = (t: number) => {
+      const dt = Math.min(33, t - last) / 16.67
+      last = t
+
+      ctx.clearRect(0, 0, width, height)
+
+      for (const p of particles) {
+        p.vy += gravity * dt
+        p.vx *= air
+        p.vy *= air
+        p.x += p.vx * dt
+        p.y += p.vy * dt
+        p.rot += p.vr * dt
+        p.life += dt
+
+        ctx.save()
+        ctx.translate(p.x, p.y)
+        ctx.rotate(p.rot)
+        ctx.fillStyle = p.color
+        ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size)
+        ctx.restore()
+      }
+
+      // Remove when all off-screen
+      const active = particles.some(p => p.y < height + 20 && p.x < width + 40)
+      if (active) rafRef.current = requestAnimationFrame(tick)
+      else {
+        ctx.clearRect(0, 0, width, height)
+        rafRef.current = null
+      }
+    }
+
+    if (rafRef.current) cancelAnimationFrame(rafRef.current)
+    rafRef.current = requestAnimationFrame(tick)
+  }
+
+  useEffect(() => {
+    const canvas = canvasRef.current
+    if (!canvas) return
+
+    const resize = () => {
+      const parent = canvas.parentElement
+      if (!parent) return
+      const rect = parent.getBoundingClientRect()
+      canvas.width = Math.min(600, rect.width)
+      canvas.height = 300
+    }
+    resize()
+    window.addEventListener('resize', resize)
+    return () => window.removeEventListener('resize', resize)
+  }, [])
+
+  const handleClick = () => {
+    const next = !isOpen
+    setIsOpen(next)
+    if (next) spawnBurst()
+  }
 
   return (
     <div className="relative flex flex-col items-center justify-center mt-10">
+      <canvas ref={canvasRef} className="pointer-events-none absolute -z-10" style={{ top: 0 }} />
+
       <button
         onClick={handleClick}
         className="group relative gift-container focus:outline-none"
