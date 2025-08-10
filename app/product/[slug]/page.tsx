@@ -5,6 +5,7 @@ import { products } from '@/lib/products'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import Link from 'next/link'
+import Image from 'next/image'
 
 type CartItem = { id: string; name: string; price: number; quantity?: number }
 
@@ -45,12 +46,11 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
 
       <section className="section-padding">
         <div className="container-custom grid grid-cols-1 lg:grid-cols-2 gap-10">
-          {/* Placeholder image */}
-          <div className="bg-neutral-900 border border-white/10 rounded-lg aspect-[4/5] flex items-center justify-center">
-            <div className="text-center">
-              <div className="w-40 h-56 mx-auto bg-white/10 border border-white/20 rounded-md mb-4" />
-              <p className="text-white/60 text-sm">Image coming soon</p>
-            </div>
+          {/* Product image */}
+          <div className="relative bg-neutral-900 border border-white/10 rounded-lg aspect-[4/5] overflow-hidden">
+            {product.image && (
+              <Image src={product.image} alt={product.name} fill className="object-cover" />
+            )}
           </div>
 
           {/* Product info */}
