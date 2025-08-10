@@ -13,6 +13,7 @@ export default function AboutPage() {
         <div className="container-custom text-white">
           <h1 className="text-4xl md:text-5xl font-serif font-bold mb-6">Our Story</h1>
           <p className="text-white/80 max-w-3xl">Daze crafts luxury gourmand and Chinese‑inspired fragrances.</p>
+          <p className="mt-2 text-white/80">Founded by <span className="font-semibold">Alex Jason Li</span>.</p>
         </div>
       </section>
 
@@ -25,7 +26,7 @@ export default function AboutPage() {
                 The Art of Fusion
               </h2>
               <p className="text-lg text-white/70 mb-6 leading-relaxed">
-                Daze was born from a passion for bridging cultures through scent. Our founder, inspired by both the rich traditions of Chinese perfumery and the indulgent world of gourmand fragrances, set out to create something truly unique.
+                Daze was born from a passion for bridging cultures through scent. Our founder, Alex Jason Li, inspired by both the rich traditions of Chinese perfumery and the indulgent world of gourmand fragrances, set out to create something truly unique.
               </p>
               <p className="text-lg text-white/70 mb-6 leading-relaxed">
                 Each fragrance is a carefully crafted journey that combines the sophisticated elegance of Chinese tea ceremonies with the warm, comforting notes of gourmand traditions. We believe that scent has the power to transport us across time and space, connecting us to memories and cultures we've never experienced.
