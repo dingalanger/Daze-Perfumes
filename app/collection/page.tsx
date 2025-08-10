@@ -1,10 +1,10 @@
 'use client'
 
-import React from 'react'
+import React, { useMemo, useState } from 'react'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import Link from 'next/link'
-import { Filter, Crown, Sparkles } from 'lucide-react'
+import { Crown, Sparkles } from 'lucide-react'
 import { products as allProducts } from '@/lib/products'
 
 function addToCart(item: { id: string; name: string; price: number; quantity?: number }) {
@@ -28,6 +28,18 @@ function showToast(message: string) {
 }
 
 export default function CollectionPage() {
+  const [filter, setFilter] = useState<'All' | 'Signature' | 'Zodiac'>('All')
+
+  const products = useMemo(() => {
+    if (filter === 'All') return allProducts
+    return allProducts.filter(p => p.category === filter)
+  }, [filter])
+
+  const baseBtn = 'px-4 py-2 rounded-none transition-colors duration-300 border'
+  const activeBtn = 'bg-white text-black border-white'
+  const ghostBtn = 'bg-transparent text-white border-white hover:bg-white hover:text-black'
+  const goldBtn = 'bg-transparent text-daze-gold border-daze-gold hover:bg-daze-gold hover:text-black'
+
   return (
     <main className="min-h-screen pt-20 bg-black">
       <Header />
@@ -65,19 +77,16 @@ export default function CollectionPage() {
           {/* Filter Bar */}
           <div className="flex flex-col md:flex-row justify-between items-center mb-12">
             <div className="flex items-center space-x-4 mb-4 md:mb-0">
-              <button className="px-4 py-2 bg-white text-black rounded-none hover:bg-white/90 transition-colors duration-300">All</button>
-              <button className="px-4 py-2 bg-transparent border border-white text-white rounded-none hover:bg-white hover:text-black transition-colors duration-300">Signature</button>
-              <button className="px-4 py-2 bg-transparent border border-daze-gold text-daze-gold rounded-none hover:bg-daze-gold hover:text-black transition-colors duration-300">Zodiac</button>
+              <button className={`${baseBtn} ${filter==='All'?activeBtn:ghostBtn}`} onClick={() => setFilter('All')}>All</button>
+              <button className={`${baseBtn} ${filter==='Signature'?activeBtn:ghostBtn}`} onClick={() => setFilter('Signature')}>Signature</button>
+              <button className={`${baseBtn} ${filter==='Zodiac'?activeBtn:goldBtn}`} onClick={() => setFilter('Zodiac')}>Zodiac</button>
             </div>
-            <div className="flex items-center space-x-2 text-white/60">
-              <Filter size={16} />
-              <span className="text-sm">Sort by: Featured</span>
-            </div>
+            {/* Removed Sort by UI */}
           </div>
 
           {/* Products Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-            {allProducts.map((product, index) => {
+            {products.map((product, index) => {
               const isStallion = product.name === 'Stallion'
               return (
                 <div key={product.id} className="group animate-slide-up" style={{ animationDelay: `${index * 0.1}s` }}>
