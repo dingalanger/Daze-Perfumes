@@ -1,10 +1,10 @@
 'use client'
 
-import React from 'react'
+import React, { useMemo, useState } from 'react'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import Link from 'next/link'
-import { Filter, Crown, Sparkles } from 'lucide-react'
+import { Crown } from 'lucide-react'
 import { products as allProducts } from '@/lib/products'
 
 function addToCart(item: { id: string; name: string; price: number; quantity?: number }) {
@@ -28,33 +28,23 @@ function showToast(message: string) {
 }
 
 export default function CollectionPage() {
+  const [filter, setFilter] = useState<'all' | 'Signature' | 'Zodiac'>('all')
+
+  const products = useMemo(() => {
+    if (filter === 'all') return allProducts
+    return allProducts.filter(p => p.category === filter)
+  }, [filter])
+
   return (
     <main className="min-h-screen pt-20 bg-black">
       <Header />
-      
-      {/* Video Section - Space for future video */}
-      <section className="relative h-80 bg-neutral-900 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-b from-neutral-900 via-neutral-800 to-black"></div>
-        <div className="relative z-10 flex items-center justify-center h-full">
-          <div className="text-center">
-            <p className="text-white/50 text-sm mb-2">Video Coming Soon</p>
-            <div className="w-16 h-16 border-2 border-white/20 rounded-full flex items-center justify-center">
-              <div className="w-8 h-8 bg-white/10 rounded-full"></div>
-            </div>
-          </div>
-        </div>
-      </section>
       
       {/* Hero Section */}
       <section className="bg-black py-20">
         <div className="container-custom">
           <div className="text-center animate-fade-in">
-            <h1 className="text-5xl md:text-6xl font-serif font-bold text-white mb-6">
-              Our <span className="text-white">Collection</span>
-            </h1>
-            <p className="text-xl text-white/70 max-w-3xl mx-auto mb-8">
-              Discover our curated selection of fragrances, including the limited edition Year of the Horse release.
-            </p>
+            <h1 className="text-5xl md:text-6xl font-serif font-bold text-white mb-6">Our <span className="text-white">Collection</span></h1>
+            <p className="text-xl text-white/70 max-w-3xl mx-auto mb-8">Discover our curated selection of fragrances, including the limited edition Year of the Horse release.</p>
           </div>
         </div>
       </section>
@@ -63,21 +53,15 @@ export default function CollectionPage() {
       <section className="section-padding bg-black">
         <div className="container-custom">
           {/* Filter Bar */}
-          <div className="flex flex-col md:flex-row justify-between items-center mb-12">
-            <div className="flex items-center space-x-4 mb-4 md:mb-0">
-              <button className="px-4 py-2 bg-white text-black rounded-none hover:bg-white/90 transition-colors duration-300">All</button>
-              <button className="px-4 py-2 bg-transparent border border-white text-white rounded-none hover:bg-white hover:text-black transition-colors duration-300">Signature</button>
-              <button className="px-4 py-2 bg-transparent border border-daze-gold text-daze-gold rounded-none hover:bg-daze-gold hover:text-black transition-colors duration-300">Zodiac</button>
-            </div>
-            <div className="flex items-center space-x-2 text-white/60">
-              <Filter size={16} />
-              <span className="text-sm">Sort by: Featured</span>
-            </div>
+          <div className="flex items-center space-x-4 mb-12">
+            <button onClick={() => setFilter('all')} className={`px-4 py-2 rounded-none transition-colors duration-300 ${filter==='all' ? 'bg-white text-black' : 'bg-transparent border border-white text-white hover:bg-white hover:text-black'}`}>All</button>
+            <button onClick={() => setFilter('Signature')} className={`px-4 py-2 rounded-none transition-colors duration-300 ${filter==='Signature' ? 'bg-white text-black' : 'bg-transparent border border-white text-white hover:bg-white hover:text-black'}`}>Signature</button>
+            <button onClick={() => setFilter('Zodiac')} className={`px-4 py-2 rounded-none transition-colors duration-300 ${filter==='Zodiac' ? 'bg-daze-gold text-black' : 'bg-transparent border border-daze-gold text-daze-gold hover:bg-daze-gold hover:text-black'}`}>Zodiac</button>
           </div>
 
           {/* Products Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-            {allProducts.map((product, index) => {
+            {products.map((product, index) => {
               const isStallion = product.name === 'Stallion'
               return (
                 <div key={product.id} className="group animate-slide-up" style={{ animationDelay: `${index * 0.1}s` }}>
@@ -98,12 +82,6 @@ export default function CollectionPage() {
                         {isStallion ? 'Zodiac — Limited Edition' : product.category}
                       </span>
                     </div>
-
-                    {isStallion && (
-                      <div className="absolute -top-6 -right-6 rotate-12 text-daze-gold/50">
-                        <Sparkles size={40} />
-                      </div>
-                    )}
 
                     {/* Product Info */}
                     <div className="p-6">
