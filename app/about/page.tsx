@@ -18,12 +18,44 @@ export default function AboutPage() {
   useEffect(() => {
     const container = containerRef.current
     if (!container) return
+
+    // Reveal-on-scroll
     const items = Array.from(container.querySelectorAll('.reveal')) as HTMLElement[]
     const obs = new IntersectionObserver((entries) => {
       entries.forEach((e) => { if (e.isIntersecting) (e.target as HTMLElement).classList.add('in-view') })
     }, { threshold: 0.15 })
     items.forEach(el => obs.observe(el))
-    return () => obs.disconnect()
+
+    // Lightweight parallax for elements with data-parallax
+    const parallaxEls = Array.from(container.querySelectorAll('[data-parallax]')) as HTMLElement[]
+    parallaxEls.forEach(el => { el.style.willChange = 'transform' })
+
+    let raf = 0
+    const onScroll = () => {
+      cancelAnimationFrame(raf)
+      raf = requestAnimationFrame(() => {
+        const vh = window.innerHeight
+        parallaxEls.forEach(el => {
+          const speedAttr = el.getAttribute('data-speed')
+          const speed = speedAttr ? parseFloat(speedAttr) : 0.06
+          const rect = el.getBoundingClientRect()
+          const centerDelta = (rect.top + rect.height / 2) - (vh / 2)
+          const translateY = Math.max(-60, Math.min(60, centerDelta * speed))
+          el.style.transform = `translate3d(0, ${translateY.toFixed(2)}px, 0)`
+        })
+      })
+    }
+
+    onScroll()
+    window.addEventListener('scroll', onScroll, { passive: true })
+    window.addEventListener('resize', onScroll)
+
+    return () => {
+      obs.disconnect()
+      window.removeEventListener('scroll', onScroll)
+      window.removeEventListener('resize', onScroll)
+      cancelAnimationFrame(raf)
+    }
   }, [])
 
   return (
@@ -44,7 +76,7 @@ export default function AboutPage() {
             <div className="grid md:grid-cols-2 gap-10 items-end reveal">
               <div>
                 <h1 className="text-5xl md:text-6xl font-serif font-bold mb-4">Our Story</h1>
-                <p className="text-white/80 text-lg">Created from memories of home, food, and family—Daze is a gourmand-forward perfume house inspired by Chinese flavors and everyday rituals.</p>
+                <p className="text-white/80 text-lg">From steamed rice and boba tea to mooncakes and midnight snacks, Daze bottles the cravings and comforts of home. Our founder, Alex Jason Li—a Chinese‑American kid who’s always sniffing everything—turned his love of unique smells into a gourmand perfume house. Every fragrance is a little taste of his memories that everyone is welcome to enjoy.</p>
               </div>
               {/* Removed the small 'Scroll to explore' hint */}
             </div>
@@ -64,17 +96,17 @@ export default function AboutPage() {
                   <article key={i} className="grid md:grid-cols-2 gap-10 items-center md:gap-16 py-16 md:py-24 reveal">
                     {/* Text */}
                     <div className={`${isEven ? '' : 'md:order-2'}`}>
-                      <div className="flex items-baseline space-x-4 mb-4">
+                      <div className="flex items-baseline space-x-4 mb-4" data-parallax data-speed="-0.06">
                         <span className="text-4xl md:text-5xl font-serif font-bold text-white/70 leading-none">{i + 1}.</span>
                         <h2 className="text-2xl md:text-3xl font-serif font-semibold">{s.title}</h2>
                       </div>
-                      <p className="text-white/85 text-lg leading-relaxed">
+                      <p className="text-white/85 text-lg leading-relaxed" data-parallax data-speed="-0.05">
                         {s.text}
                       </p>
                     </div>
 
                     {/* Image */}
-                    <div className={`${isEven ? 'md:order-2' : ''}`}>
+                    <div className={`${isEven ? 'md:order-2' : ''}`} data-parallax data-speed="0.08">
                       <div className="relative aspect-[4/3] md:aspect-[5/4] w-full overflow-hidden rounded-3xl border border-white/10 bg-neutral-900">
                         <Image
                           src={s.img}
