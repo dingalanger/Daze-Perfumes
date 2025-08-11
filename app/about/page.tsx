@@ -5,27 +5,27 @@ import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import Image from 'next/image'
 
-function Parallax({ speed = 0.1, scaleIntensity = 0.00018, children, className = '' }: { speed?: number; scaleIntensity?: number; children: React.ReactNode; className?: string }) {
+function Parallax({ speed = 0.1, scaleIntensity = 0.00018, children, className = '', scrollEl }: { speed?: number; scaleIntensity?: number; children: React.ReactNode; className?: string; scrollEl?: HTMLElement | null }) {
   const ref = useRef<HTMLDivElement | null>(null)
   useEffect(() => {
     const el = ref.current
     if (!el) return
     let raf = 0
-    let startTop = 0
-    const measure = () => { const rect = el.getBoundingClientRect(); startTop = rect.top + window.scrollY }
+    const getScrollY = () => (scrollEl ? scrollEl.scrollTop : window.scrollY)
     const onScroll = () => {
       cancelAnimationFrame(raf)
       raf = requestAnimationFrame(() => {
-        const delta = window.scrollY - startTop
+        const delta = getScrollY()
         const y = delta * speed
         const scale = 1 + Math.min(Math.abs(delta) * scaleIntensity, 0.06)
         el.style.transform = `translate3d(0, ${y.toFixed(2)}px, 0) scale(${scale.toFixed(4)})`
       })
     }
-    measure(); onScroll();
-    window.addEventListener('scroll', onScroll, { passive: true }); window.addEventListener('resize', measure)
-    return () => { window.removeEventListener('scroll', onScroll); window.removeEventListener('resize', measure); cancelAnimationFrame(raf) }
-  }, [speed, scaleIntensity])
+    onScroll()
+    const target = scrollEl || window
+    target.addEventListener('scroll', onScroll, { passive: true } as any)
+    return () => { target.removeEventListener('scroll', onScroll as any); cancelAnimationFrame(raf) }
+  }, [speed, scaleIntensity, scrollEl])
   return <div ref={ref} className={className + ' will-change-transform'}>{children}</div>
 }
 
@@ -43,8 +43,14 @@ export default function AboutPage() {
   const sectionTops = useRef<number[]>([])
   const sectionHeights = useRef<number[]>([])
   const [activeProgress, setActiveProgress] = useState(0)
+  const scrollRef = useRef<HTMLDivElement | null>(null)
+  const [containerReady, setContainerReady] = useState(false)
+
+  useEffect(() => { setContainerReady(true) }, [])
 
   useEffect(() => {
+    if (!containerReady) return
+    const rootEl = scrollRef.current || undefined
     const obs = new IntersectionObserver((entries) => {
       entries.forEach((e) => {
         if (e.isIntersecting) {
@@ -52,47 +58,50 @@ export default function AboutPage() {
           setActive(idx)
         }
       })
-    }, { threshold: 0.4 })
+    }, { threshold: 0.5, root: rootEl })
     refs.current.forEach((el) => { if (el) obs.observe(el) })
     return () => obs.disconnect()
-  }, [])
+  }, [containerReady])
 
   useEffect(() => {
     let raf = 0
     const update = () => {
-      const centerY = window.innerHeight / 2
+      const container = scrollRef.current
       const current = refs.current[active]
-      if (!current) { setIsBetweenTextBlocks(false); setActiveProgress(0); return }
-      const rect = current.getBoundingClientRect()
-      const isCenterInside = centerY >= rect.top && centerY <= rect.bottom
-      setIsBetweenTextBlocks(!isCenterInside)
+      if (!container || !current) { setIsBetweenTextBlocks(false); setActiveProgress(0); return }
+      const containerHeight = container.clientHeight
+      const containerScroll = container.scrollTop
 
-      // Compute progress within this section based on its measured top/height
-      const top = sectionTops.current[active] ?? (rect.top + window.scrollY)
-      const height = sectionHeights.current[active] ?? rect.height
-      const scrollY = window.scrollY
-      const progress = Math.min(1, Math.max(0, (scrollY - top + window.innerHeight * 0.25) / (height + window.innerHeight * 0.5)))
+      const top = sectionTops.current[active] ?? current.offsetTop
+      const height = sectionHeights.current[active] ?? current.offsetHeight
+
+      // whether the vertical center of container is inside the section
+      const center = containerScroll + containerHeight / 2
+      setIsBetweenTextBlocks(!(center >= top && center <= top + height))
+
+      const progress = Math.min(1, Math.max(0, (containerScroll - top + containerHeight * 0.25) / (height + containerHeight * 0.5)))
       setActiveProgress(progress)
     }
     const onScroll = () => { cancelAnimationFrame(raf); raf = requestAnimationFrame(update) }
     update()
-    window.addEventListener('scroll', onScroll, { passive: true })
+    const container = scrollRef.current
+    container?.addEventListener('scroll', onScroll, { passive: true })
     window.addEventListener('resize', update)
-    return () => { window.removeEventListener('scroll', onScroll); window.removeEventListener('resize', update); cancelAnimationFrame(raf) }
+    return () => { container?.removeEventListener('scroll', onScroll); window.removeEventListener('resize', update); cancelAnimationFrame(raf) }
   }, [active])
 
   useEffect(() => {
+    const container = scrollRef.current
     const measureAll = () => {
-      sectionTops.current = refs.current.map((el) => {
-        if (!el) return 0
-        const r = el.getBoundingClientRect()
-        return r.top + window.scrollY
-      })
+      sectionTops.current = refs.current.map((el) => el?.offsetTop || 0)
       sectionHeights.current = refs.current.map((el) => el?.offsetHeight || 0)
     }
     measureAll()
-    window.addEventListener('resize', measureAll)
-    return () => window.removeEventListener('resize', measureAll)
+    const onResize = () => measureAll()
+    window.addEventListener('resize', onResize)
+    const ro = container ? new ResizeObserver(measureAll) : null
+    if (container && ro) ro.observe(container)
+    return () => { window.removeEventListener('resize', onResize); if (container && ro) ro.disconnect() }
   }, [])
 
   const computeBlurPx = (p: number) => {
@@ -101,67 +110,76 @@ export default function AboutPage() {
     if (p < 0.9) return ((p - 0.65) / 0.25) * 18
     return 18
   }
-  const activeBlur = computeBlurPx(activeProgress)
+
+  // Smooth blur easing
+  const [blurAnimated, setBlurAnimated] = useState(18)
+  useEffect(() => {
+    let raf = 0
+    const target = computeBlurPx(activeProgress)
+    const animate = () => {
+      setBlurAnimated((prev) => {
+        const next = prev + (target - prev) * 0.12
+        if (Math.abs(next - target) < 0.1) return target
+        raf = requestAnimationFrame(animate)
+        return next
+      })
+    }
+    raf = requestAnimationFrame(animate)
+    return () => cancelAnimationFrame(raf)
+  }, [activeProgress])
 
   return (
     <>
-      <div className="fixed inset-0 z-0 overflow-hidden pointer-events-none">
-        {sections.map((s, i) => (
-          <Parallax
-            key={s.img}
-            speed={-0.12 + i * 0.03}
-            scaleIntensity={0.00025}
-            className="absolute inset-0"
-          >
-            <div className={`${active === i ? 'z-20 opacity-100' : 'z-10 opacity-0'} absolute inset-0 transition-opacity duration-700 ease-out`}>
-              <Image
-                src={s.img}
-                alt=""
-                fill
-                priority={i === 0}
-                sizes="100vw"
-                unoptimized
-                className="object-cover"
-                style={{
-                  objectPosition: (s as any).position || '50% 50%',
-                  filter: active === i ? `blur(${activeBlur.toFixed(1)}px)` : 'blur(18px)',
-                  transition: 'filter 700ms ease-out'
-                }}
-              />
-              <div className={`absolute inset-0 transition-colors duration-500 ${active === i ? (activeBlur < 3 ? 'bg-black/25' : 'bg-black/65') : 'bg-black/50'}`} />
-            </div>
-          </Parallax>
-        ))}
-      </div>
+      <Header />
 
-      <main className="min-h-screen text-white bg-transparent relative z-10">
-        <Header />
-
-        <section className="pt-24 pb-32">
-          <div className="container-custom max-w-3xl">
-            <h1 className="text-5xl font-serif font-bold mb-12">Our Story</h1>
-            {sections.map((s, i) => (
-              <div key={i} ref={(el) => { refs.current[i] = el }} data-index={i} className="min-h-[75vh] flex items-center">
-                <div
-                  className={`transition-all duration-700 border border-white/10 p-6 md:p-8`}
-                  style={i === active ? {
-                    backdropFilter: activeBlur < 3 ? 'blur(0px)' : 'blur(4px)',
-                    backgroundColor: activeBlur < 3 ? 'rgba(0,0,0,0.25)' : 'rgba(0,0,0,0.5)',
-                    opacity: Math.min(1, Math.max(0, (activeBlur - 2) / 10)),
-                  } : { backdropFilter: 'blur(4px)', backgroundColor: 'rgba(0,0,0,0.5)', opacity: 0.85 }}
-                >
-                  <p className="text-lg md:text-xl leading-relaxed text-white/90">{s.text}</p>
-                </div>
+      {/* Dedicated scroll container for the About page */}
+      <div ref={scrollRef} className="fixed inset-0 z-0 overflow-y-auto overscroll-contain scroll-smooth">
+        {/* Fixed, pinned background layers behind the scrolling text */}
+        <div className="pointer-events-none fixed inset-0 -z-10 overflow-hidden">
+          {sections.map((s, i) => (
+            <Parallax key={s.img} speed={-0.12 + i * 0.03} scaleIntensity={0.00025} className="absolute inset-0" scrollEl={scrollRef.current}>
+              <div className={`${active === i ? 'z-20 opacity-100' : 'z-10 opacity-0'} absolute inset-0 transition-opacity duration-700 ease-out`}>
+                <Image src={s.img} alt="" fill priority={i === 0} sizes="100vw" unoptimized className="object-cover" style={{ objectPosition: (s as any).position || '50% 50%', filter: active === i ? `blur(${blurAnimated.toFixed(1)}px)` : 'blur(18px)', transition: 'filter 500ms ease-out' }} />
+                {/* Mid-ground subtle gradient/texture layer for depth */}
+                <Parallax speed={-0.06 + i * 0.02} scaleIntensity={0} className="absolute inset-0" scrollEl={scrollRef.current}>
+                  <div className={`absolute inset-0`} style={{ background: 'radial-gradient(120% 80% at 50% 20%, rgba(0,0,0,0.1), transparent 60%)' }} />
+                </Parallax>
+                {/* Foreground vignette / darkening overlay for readability */}
+                <div className={`absolute inset-0 transition-colors duration-500 ${active === i ? (blurAnimated < 3 ? 'bg-black/25' : 'bg-black/65') : 'bg-black/50'}`} />
               </div>
-            ))}
-            <div className="min-h-[60vh] flex items-center justify-center">
-              <a href="/collection" className="btn-outline-light inline-block">Shop Collection</a>
-            </div>
-          </div>
-        </section>
+            </Parallax>
+          ))}
+        </div>
 
-        <Footer />
-      </main>
+        {/* Foreground scroller content; keep nav visible above */}
+        <main className="min-h-screen text-white bg-transparent relative z-10">
+          <section className="pt-24 pb-32">
+            <div className="container-custom max-w-3xl">
+              <h1 className="text-5xl font-serif font-bold mb-12">Our Story</h1>
+              {sections.map((s, i) => (
+                <div key={i} ref={(el) => { refs.current[i] = el }} data-index={i} className="min-h-[75vh] flex items-center">
+                  <div
+                    className={`transition-all duration-700 border border-white/10 p-6 md:p-8`}
+                    style={i === active ? {
+                      backdropFilter: blurAnimated < 3 ? 'blur(0px)' : 'blur(4px)',
+                      backgroundColor: blurAnimated < 3 ? 'rgba(0,0,0,0.25)' : 'rgba(0,0,0,0.5)',
+                      opacity: Math.min(1, Math.max(0, (blurAnimated - 2) / 10)),
+                      transform: 'translateZ(0)'
+                    } : { backdropFilter: 'blur(4px)', backgroundColor: 'rgba(0,0,0,0.5)', opacity: 0.85, transform: 'translateZ(0)' }}
+                  >
+                    <p className="text-lg md:text-xl leading-relaxed text-white/90">{s.text}</p>
+                  </div>
+                </div>
+              ))}
+              <div className="min-h-[60vh] flex items-center justify-center">
+                <a href="/collection" className="btn-outline-light inline-block">Shop Collection</a>
+              </div>
+            </div>
+          </section>
+
+          <Footer />
+        </main>
+      </div>
     </>
   )
 } 
