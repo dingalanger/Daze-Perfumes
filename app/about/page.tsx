@@ -46,35 +46,38 @@ export default function AboutPage() {
   }, [])
 
   return (
-    <main className="min-h-screen bg-black text-white">
-      <Header />
-
+    <>
+      {/* Global background images under everything */}
       <div className="fixed inset-0 -z-10 overflow-hidden">
         {sections.map((s, i) => (
           <Parallax key={s.img} speed={-0.06 + i * 0.01} className="absolute inset-0">
-            <Image src={s.img} alt="" fill priority={i === 0} className={`object-cover transition-all duration-700 ${active === i ? 'opacity-100 blur-0' : 'opacity-50 blur-lg'}`} />
-            <div className={`absolute inset-0 transition-colors duration-700 ${active === i ? 'bg-black/20' : 'bg-black/40'}`} />
+            <Image src={s.img} alt="" fill priority={i === 0} className={`object-cover transition-all duration-700 ${active === i ? 'opacity-100 blur-0' : 'opacity-40 blur-lg'}`} />
+            <div className={`absolute inset-0 transition-colors duration-700 ${active === i ? 'bg-black/20' : 'bg-black/60'}`} />
           </Parallax>
         ))}
       </div>
 
-      <section className="pt-24 pb-32">
-        <div className="container-custom max-w-3xl">
-          <h1 className="text-5xl font-serif font-bold mb-12">Our Story</h1>
-          {sections.map((s, i) => (
-            <div key={i} ref={(el) => { refs.current[i] = el }} data-index={i} className="min-h-[75vh] flex items-center">
-              <div className="backdrop-blur-sm bg-black/30 p-6 md:p-8 border border-white/10">
-                <p className="text-lg md:text-xl leading-relaxed text-white/90">{s.text}</p>
-              </div>
-            </div>
-          ))}
-          <div className="min-h-[60vh] flex items-center justify-center">
-            <a href="/collection" className="btn-outline-light inline-block">Shop Collection</a>
-          </div>
-        </div>
-      </section>
+      <main className="min-h-screen text-white bg-transparent">
+        <Header />
 
-      <Footer />
-    </main>
+        <section className="pt-24 pb-32">
+          <div className="container-custom max-w-3xl">
+            <h1 className="text-5xl font-serif font-bold mb-12">Our Story</h1>
+            {sections.map((s, i) => (
+              <div key={i} ref={(el) => { refs.current[i] = el }} data-index={i} className="min-h-[75vh] flex items-center">
+                <div className={`transition-all duration-700 border border-white/10 p-6 md:p-8 ${active === i ? 'backdrop-blur-0 bg-black/30 blur-0 opacity-100' : 'backdrop-blur-sm bg-black/40 blur-[2px] opacity-80'}`}>
+                  <p className="text-lg md:text-xl leading-relaxed text-white/90">{s.text}</p>
+                </div>
+              </div>
+            ))}
+            <div className="min-h-[60vh] flex items-center justify-center">
+              <a href="/collection" className="btn-outline-light inline-block">Shop Collection</a>
+            </div>
+          </div>
+        </section>
+
+        <Footer />
+      </main>
+    </>
   )
 } 
