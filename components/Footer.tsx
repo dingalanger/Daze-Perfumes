@@ -1,6 +1,6 @@
 import React from 'react'
 import Link from 'next/link'
-import { Instagram, Facebook, Twitter, Mail, Phone, MapPin } from 'lucide-react'
+import { Instagram, MapPin } from 'lucide-react'
 
 export default function Footer() {
   return (
@@ -10,15 +10,15 @@ export default function Footer() {
           {/* Brand Section */}
           <div className="col-span-1 md:col-span-2">
             <div className="mb-6">
-              <span className="text-3xl font-cursive text-white">Daze</span>
+              <span className="text-3xl font-serif text-white">Daze</span>
             </div>
             <p className="text-white/70 mb-6 max-w-md">
               Crafting luxury gourmand and Chinese-inspired fragrances that tell stories through scent. Each creation is a journey through time and tradition.
             </p>
             <div className="flex space-x-4">
-              <a href="#" className="text-white/70 hover:text-white transition-colors duration-300"><Instagram size={20} /></a>
-              <a href="#" className="text-white/70 hover:text-white transition-colors duration-300"><Facebook size={20} /></a>
-              <a href="#" className="text-white/70 hover:text-white transition-colors duration-300"><Twitter size={20} /></a>
+              <a href="https://www.instagram.com/dazeparfums/" target="_blank" rel="noopener noreferrer" className="text-white/70 hover:text-white transition-colors duration-300">
+                <Instagram size={20} />
+              </a>
             </div>
           </div>
 
@@ -42,14 +42,6 @@ export default function Footer() {
           <div>
             <h3 className="text-lg font-semibold mb-4 text-white">Contact</h3>
             <ul className="space-y-3">
-              <li className="flex items-center space-x-2">
-                <Mail size={16} className="text-white/80" />
-                <span className="text-white/70 text-sm">hello@daze.com</span>
-              </li>
-              <li className="flex items-center space-x-2">
-                <Phone size={16} className="text-white/80" />
-                <span className="text-white/70 text-sm">+1 (555) 123-4567</span>
-              </li>
               <li className="flex items-center space-x-2">
                 <MapPin size={16} className="text-white/80" />
                 <span className="text-white/70 text-sm">New York, NY</span>
