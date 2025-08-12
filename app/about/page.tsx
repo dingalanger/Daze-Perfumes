@@ -72,7 +72,7 @@ export default function AboutPage() {
 
       {/* Background video */}
       <div className="fixed inset-0 -z-10 overflow-hidden">
-        <video className="absolute inset-0 w-full h-full object-cover" src="/videos/O1.mp4" autoPlay muted loop playsInline preload="metadata" />
+        <video className="absolute inset-0 w-full h-full object-cover" src="/videos/O2.mp4" autoPlay muted loop playsInline preload="metadata" />
         <div className="absolute inset-0 bg-black/40" />
       </div>
 
@@ -80,12 +80,12 @@ export default function AboutPage() {
         {/* Hero with image */}
         <section className="pt-28 pb-16">
           <div className="container-custom max-w-5xl px-4">
-            <div className="grid md:grid-cols-2 gap-10 items-end reveal">
+            <div className="grid md:grid-cols-2 gap-10 md:gap-16 items-center reveal">
               <div>
                 <h1 className="text-5xl md:text-6xl font-serif font-bold mb-4">Our Story</h1>
                 <p className="text-white/80 text-lg">From steamed rice and boba tea to mooncakes and midnight snacks, Daze bottles the cravings and comforts of home. Our founder, Alex Jason Li—a Chinese‑American kid who’s always sniffing everything—turned his love of unique smells into a gourmand perfume house. Every fragrance is a little taste of his memories that everyone is welcome to enjoy.</p>
               </div>
-              <div className="md:justify-self-end" data-parallax data-speed="0.08">
+              <div>
                 <div className="relative aspect-[4/3] md:aspect-[5/4] w-full overflow-hidden rounded-3xl border border-white/10 bg-neutral-900">
                   <Image src="/images/about_founder1.jpg" alt="Founder" fill sizes="(max-width: 768px) 100vw, 45vw" priority unoptimized className="object-cover" />
                   <div className="absolute inset-0 bg-black/10" />
