@@ -7,10 +7,18 @@ import Image from 'next/image'
 
 export default function AboutPage() {
   const sections = [
-    { img: '/images/about_founder1.jpg', title: 'Beginnings', text: "I’ve always been surrounded by scent. The spice of mapo tofu in my parents’ kitchen. The sugary smell of fresh boba. The faint, nutty aroma of mooncakes around Mid-Autumn Festival. Even when life moved me, from China to Ohio to Michigan to Maine, and now New York, those smells stayed with me." },
-    { img: '/images/about_lab.jpg', title: 'First Experiments', text: `I first dreamed of making perfumes when I was sixteen. I’d use the leftover money on my mom’s Visa gift cards to order colognes online, then hide the bottles in a pile of clothes so no one would find them. It wasn’t that I’d stolen anything—I was just afraid of the disapproving look I knew I’d get. In my family, school always came first. Being Asian in America meant keeping your head down, working hard, and choosing a safe path. Perfume didn’t fit into that plan, so I kept my love for it quiet.` },
-    { img: '/images/about_winter-columbia.jpg', title: 'Turning Point', text: "Now I’m studying at an Ivy League school, and for the first time, I have the resources (and the nerve) to make it real. Daze brings Chinese‑inspired gourmand scents to the American market—sweet, savory, spicy, warm." },
-    { img: '/images/about_founder.jpg', title: 'For Everyone', text: "All of our scents are unisex, because memories are universal. They belong to anyone who’s ever caught a smell in the air and been taken back to a time, a place, or a feeling they thought they’d forgotten." },
+    { title: 'Beginnings', text: "I’ve always been surrounded by scent. The spice of mapo tofu in my parents’ kitchen. The sugary smell of fresh boba. The faint, nutty aroma of mooncakes around Mid-Autumn Festival. Even when life moved me, from China to Ohio to Michigan to Maine, and now New York, those smells stayed with me." },
+    { title: 'First Experiments', text: `I first dreamed of making perfumes when I was sixteen. I’d use the leftover money on my mom’s Visa gift cards to order colognes online, then hide the bottles in a pile of clothes so no one would find them. It wasn’t that I’d stolen anything—I was just afraid of the disapproving look I knew I’d get. In my family, school always came first. Being Asian in America meant keeping your head down, working hard, and choosing a safe path. Perfume didn’t fit into that plan, so I kept my love for it quiet.` },
+    { title: 'Turning Point', text: "Now I’m studying at an Ivy League school, and for the first time, I have the resources (and the nerve) to make it real. Daze brings Chinese‑inspired gourmand scents to the American market—sweet, savory, spicy, warm." },
+    { title: 'For Everyone', text: "All of our scents are unisex, because memories are universal. They belong to anyone who’s ever caught a smell in the air and been taken back to a time, a place, or a feeling they thought they’d forgotten." },
+  ]
+
+  // Shifted image mapping: hero uses founder1, then sections get the next images, last is placeholder
+  const shiftedImages: (string | null)[] = [
+    '/images/about_lab.jpg',
+    '/images/about_winter-columbia.jpg',
+    '/images/about_founder.jpg',
+    null,
   ]
 
   const containerRef = useRef<HTMLDivElement | null>(null)
@@ -62,15 +70,14 @@ export default function AboutPage() {
     <>
       <Header />
 
-      {/* Placeholder background (swap with your provided image later) */}
+      {/* Background video */}
       <div className="fixed inset-0 -z-10 overflow-hidden">
-        <div className="absolute inset-0" style={{ background: 'radial-gradient(120% 100% at 0% 0%, #1a1a1a 0%, #0b0b0b 45%, #050505 100%)' }} />
-        <div className="absolute inset-0 opacity-[0.18] mix-blend-soft-light" style={{ backgroundImage: 'radial-gradient(rgba(255,255,255,0.15) 1px, transparent 1px)', backgroundSize: '3px 3px' }} />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/20 to-black/50" />
+        <video className="absolute inset-0 w-full h-full object-cover" src="/videos/O1.mp4" autoPlay muted loop playsInline preload="metadata" />
+        <div className="absolute inset-0 bg-black/40" />
       </div>
 
       <main ref={containerRef} className="relative z-0">
-        {/* Hero */}
+        {/* Hero with image */}
         <section className="pt-28 pb-16">
           <div className="container-custom max-w-5xl px-4">
             <div className="grid md:grid-cols-2 gap-10 items-end reveal">
@@ -78,7 +85,12 @@ export default function AboutPage() {
                 <h1 className="text-5xl md:text-6xl font-serif font-bold mb-4">Our Story</h1>
                 <p className="text-white/80 text-lg">From steamed rice and boba tea to mooncakes and midnight snacks, Daze bottles the cravings and comforts of home. Our founder, Alex Jason Li—a Chinese‑American kid who’s always sniffing everything—turned his love of unique smells into a gourmand perfume house. Every fragrance is a little taste of his memories that everyone is welcome to enjoy.</p>
               </div>
-              {/* Removed the small 'Scroll to explore' hint */}
+              <div className="md:justify-self-end" data-parallax data-speed="0.08">
+                <div className="relative aspect-[4/3] md:aspect-[5/4] w-full overflow-hidden rounded-3xl border border-white/10 bg-neutral-900">
+                  <Image src="/images/about_founder1.jpg" alt="Founder" fill sizes="(max-width: 768px) 100vw, 45vw" priority unoptimized className="object-cover" />
+                  <div className="absolute inset-0 bg-black/10" />
+                </div>
+              </div>
             </div>
           </div>
         </section>
@@ -92,6 +104,7 @@ export default function AboutPage() {
 
               {sections.map((s, i) => {
                 const isEven = i % 2 === 0
+                const img = shiftedImages[i]
                 return (
                   <article key={i} className="grid md:grid-cols-2 gap-10 items-center md:gap-16 py-16 md:py-24 reveal">
                     {/* Text */}
@@ -105,21 +118,26 @@ export default function AboutPage() {
                       </p>
                     </div>
 
-                    {/* Image */}
+                    {/* Image / Placeholder */}
                     <div className={`${isEven ? 'md:order-2' : ''}`} data-parallax data-speed="0.08">
-                      <div className="relative aspect-[4/3] md:aspect-[5/4] w-full overflow-hidden rounded-3xl border border-white/10 bg-neutral-900">
-                        <Image
-                          src={s.img}
-                          alt={s.title}
-                          fill
-                          sizes="(max-width: 768px) 100vw, 45vw"
-                          priority={i === 0}
-                          loading={i === 0 ? 'eager' : 'lazy'}
-                          unoptimized
-                          className="object-cover"
-                        />
-                        <div className="absolute inset-0 bg-black/10" />
-                      </div>
+                      {img ? (
+                        <div className="relative aspect-[4/3] md:aspect-[5/4] w-full overflow-hidden rounded-3xl border border-white/10 bg-neutral-900">
+                          <Image
+                            src={img}
+                            alt={s.title}
+                            fill
+                            sizes="(max-width: 768px) 100vw, 45vw"
+                            loading="lazy"
+                            unoptimized
+                            className="object-cover"
+                          />
+                          <div className="absolute inset-0 bg-black/10" />
+                        </div>
+                      ) : (
+                        <div className="relative aspect-[4/3] md:aspect-[5/4] w-full overflow-hidden rounded-3xl border border-white/10 bg-neutral-800 grid place-items-center">
+                          <span className="text-white/60">Image coming soon</span>
+                        </div>
+                      )}
                     </div>
                   </article>
                 )
