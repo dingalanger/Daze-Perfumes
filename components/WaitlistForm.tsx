@@ -1,9 +1,10 @@
 'use client'
 
 import React from 'react'
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { getSupabaseClient } from '@/lib/supabase'
 import { Mail, User, Phone, CheckCircle, AlertCircle } from 'lucide-react'
+import ReCAPTCHA from 'react-google-recaptcha'
 
 export default function WaitlistForm() {
   const [formData, setFormData] = useState({
@@ -16,6 +17,7 @@ export default function WaitlistForm() {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle')
   const [errorMessage, setErrorMessage] = useState('')
+  const recaptchaRef = useRef<ReCAPTCHA | null>(null)
 
   const interestOptions = [
     'Gourmand Fragrances',
@@ -41,9 +43,29 @@ export default function WaitlistForm() {
     setSubmitStatus('idle')
     setErrorMessage('')
 
-    const supabase = getSupabaseClient()
+    const siteKey = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY
+    if (!siteKey) {
+      setErrorMessage('Captcha is not configured. Please try again later.')
+      setIsSubmitting(false)
+      return
+    }
 
     try {
+      const token = await recaptchaRef.current?.executeAsync()
+      recaptchaRef.current?.reset()
+      if (!token) throw new Error('captcha-failed')
+
+      const verifyRes = await fetch('/api/recaptcha/verify', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ token }),
+      })
+      const verify = await verifyRes.json()
+      if (!verifyRes.ok || !verify.success) {
+        throw new Error('captcha-invalid')
+      }
+
+      const supabase = getSupabaseClient()
       const { data, error } = await supabase
         .from('waitlist')
         .insert([{ email: formData.email, first_name: formData.first_name || null, last_name: formData.last_name || null, phone: formData.phone || null, interests: formData.interests.length > 0 ? formData.interests : null }])
@@ -58,8 +80,8 @@ export default function WaitlistForm() {
         setSubmitStatus('success')
         setFormData({ email: '', first_name: '', last_name: '', phone: '', interests: [] })
       }
-    } catch (error) {
-      setErrorMessage('Network error. Please check your connection and try again.')
+    } catch (err) {
+      setErrorMessage('Captcha check failed. Please try again.')
       setSubmitStatus('error')
     } finally {
       setIsSubmitting(false)
@@ -139,11 +161,19 @@ export default function WaitlistForm() {
           </div>
         </div>
 
+        <div className="flex items-center justify-center">
+          <ReCAPTCHA
+            ref={recaptchaRef}
+            size="invisible"
+            sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY as string}
+          />
+        </div>
+
         <button type="submit" disabled={isSubmitting || !formData.email} className="w-full btn-outline-light disabled:opacity-50 disabled:cursor-not-allowed">
           {isSubmitting ? 'Joining...' : 'Join Waitlist'}
         </button>
 
-        <p className="text-xs text-white/50 text-center">By joining our waitlist, you agree to receive updates about Daze. You can unsubscribe at any time.</p>
+        <p className="text-xs text-white/50 text-center">Protected by reCAPTCHA and subject to Google's <a className="underline" href="https://policies.google.com/privacy" target="_blank" rel="noreferrer">Privacy Policy</a> and <a className="underline" href="https://policies.google.com/terms" target="_blank" rel="noreferrer">Terms of Service</a>.</p>
       </form>
     </div>
   )
