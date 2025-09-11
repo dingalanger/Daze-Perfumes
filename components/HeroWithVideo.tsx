@@ -2,7 +2,6 @@
 
 import React, { useEffect, useRef } from 'react'
 import Link from 'next/link'
-import { Gift } from 'lucide-react'
 
 export default function HeroWithVideo() {
   const videoRef = useRef<HTMLVideoElement | null>(null)
@@ -71,14 +70,7 @@ export default function HeroWithVideo() {
         </div>
       </div>
 
-      {/* Secret Icon Link */}
-      <Link
-        href="/natalie"
-        aria-label="Secret"
-        className="absolute bottom-6 right-6 z-10 text-white/40 hover:text-white transition-colors"
-      >
-        <Gift size={20} />
-      </Link>
+      {/* Secret icon removed */}
     </section>
   )
 } 
