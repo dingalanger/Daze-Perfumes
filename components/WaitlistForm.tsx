@@ -4,6 +4,7 @@ import React from 'react'
 import { useState } from 'react'
 import { getSupabaseClient } from '@/lib/supabase'
 import { Mail, User, Phone, CheckCircle, AlertCircle } from 'lucide-react'
+import ReCAPTCHA from 'react-google-recaptcha'
 
 export default function WaitlistForm() {
   const [formData, setFormData] = useState({
@@ -16,6 +17,7 @@ export default function WaitlistForm() {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle')
   const [errorMessage, setErrorMessage] = useState('')
+  const [captchaToken, setCaptchaToken] = useState<string | null>(null)
 
   const interestOptions = [
     'Gourmand Fragrances',
@@ -35,6 +37,17 @@ export default function WaitlistForm() {
     }))
   }
 
+  const verifyCaptcha = async (): Promise<boolean> => {
+    try {
+      if (!captchaToken) return false
+      const res = await fetch('/api/recaptcha', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ token: captchaToken }) })
+      const json = await res.json()
+      return Boolean(json.success)
+    } catch {
+      return false
+    }
+  }
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsSubmitting(true)
@@ -44,6 +57,14 @@ export default function WaitlistForm() {
     const supabase = getSupabaseClient()
 
     try {
+      // reCAPTCHA gate
+      const ok = await verifyCaptcha()
+      if (!ok) {
+        setErrorMessage('Captcha verification failed. Please try again.')
+        setSubmitStatus('error')
+        return
+      }
+
       const { data, error } = await supabase
         .from('waitlist')
         .insert([{ email: formData.email, first_name: formData.first_name || null, last_name: formData.last_name || null, phone: formData.phone || null, interests: formData.interests.length > 0 ? formData.interests : null }])
@@ -57,6 +78,7 @@ export default function WaitlistForm() {
       } else {
         setSubmitStatus('success')
         setFormData({ email: '', first_name: '', last_name: '', phone: '', interests: [] })
+        setCaptchaToken(null)
       }
     } catch (error) {
       setErrorMessage('Network error. Please check your connection and try again.')
@@ -120,7 +142,7 @@ export default function WaitlistForm() {
         </div>
 
         <div>
-          <label htmlFor="phone" className="block text-sm font-medium text-white mb-2">Phone Number (Optional)</label>
+          <label htmlFor="phone" className="block text sm font-medium text-white mb-2">Phone Number (Optional)</label>
           <div className="relative">
             <Phone size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-white/40" />
             <input type="tel" id="phone" value={formData.phone} onChange={(e) => setFormData(prev => ({ ...prev, phone: e.target.value }))} className="w-full bg-neutral-900 text-white placeholder-white/40 pl-10 pr-4 py-3 border border-white/10 focus:border-white/40 focus:outline-none transition-colors duration-300" placeholder="+1 (555) 123-4567" />
@@ -139,7 +161,12 @@ export default function WaitlistForm() {
           </div>
         </div>
 
-        <button type="submit" disabled={isSubmitting || !formData.email} className="w-full btn-outline-light disabled:opacity-50 disabled:cursor-not-allowed">
+        {/* reCAPTCHA */}
+        <div className="pt-2">
+          <ReCAPTCHA sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || ''} theme="dark" onChange={(token) => setCaptchaToken(token)} />
+        </div>
+
+        <button type="submit" disabled={isSubmitting || !formData.email || !captchaToken} className="w-full btn-outline-light disabled:opacity-50 disabled:cursor-not-allowed">
           {isSubmitting ? 'Joining...' : 'Join Waitlist'}
         </button>
 
