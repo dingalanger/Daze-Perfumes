@@ -85,6 +85,10 @@ daze-perfumes/
    ```env
    NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
    NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+
+   # reCAPTCHA v3
+   NEXT_PUBLIC_RECAPTCHA_SITE_KEY=your_recaptcha_v3_site_key
+   RECAPTCHA_SECRET_KEY=your_recaptcha_v3_secret_key
    ```
 
 4. **Run the development server**

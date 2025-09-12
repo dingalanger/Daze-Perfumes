@@ -19,7 +19,13 @@ export async function POST(request: Request) {
     })
     const data = await resp.json()
 
-    const ok = Boolean(data.success) && (typeof data.score !== 'number' || data.score >= 0.5)
+    // Support both v2 (checkbox) and v3 (score-based):
+    // - v2: no score/action fields, only success boolean
+    // - v3: success + score + action
+    const isV3 = typeof data.score === 'number'
+    const scoreIsOk = !isV3 || data.score >= 0.5
+    const actionIsOk = !isV3 || typeof data.action !== 'string' || data.action === 'waitlist_submit'
+    const ok = Boolean(data.success) && scoreIsOk && actionIsOk
     return NextResponse.json({ success: ok, raw: data }, { status: ok ? 200 : 400 })
   } catch (err) {
     return NextResponse.json({ success: false, error: 'exception' }, { status: 500 })

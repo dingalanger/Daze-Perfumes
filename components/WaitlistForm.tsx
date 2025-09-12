@@ -6,7 +6,7 @@ import { getSupabaseClient } from '@/lib/supabase'
 import { Mail, User, Phone, CheckCircle, AlertCircle } from 'lucide-react'
 import ReCAPTCHA from 'react-google-recaptcha'
 
-export default function WaitlistForm() {
+function WaitlistInner({ siteKey }: { siteKey?: string }) {
   const [formData, setFormData] = useState({
     email: '',
     first_name: '',
@@ -57,7 +57,6 @@ export default function WaitlistForm() {
     const supabase = getSupabaseClient()
 
     try {
-      // reCAPTCHA gate
       const ok = await verifyCaptcha()
       if (!ok) {
         setErrorMessage('Captcha verification failed. Please try again.')
@@ -78,7 +77,6 @@ export default function WaitlistForm() {
       } else {
         setSubmitStatus('success')
         setFormData({ email: '', first_name: '', last_name: '', phone: '', interests: [] })
-        setCaptchaToken(null)
       }
     } catch (error) {
       setErrorMessage('Network error. Please check your connection and try again.')
@@ -87,6 +85,8 @@ export default function WaitlistForm() {
       setIsSubmitting(false)
     }
   }
+
+  const hasSiteKey = Boolean(siteKey)
 
   return (
     <div className="bg-neutral-950 rounded-lg p-8 shadow-sm border border-white/10">
@@ -125,7 +125,7 @@ export default function WaitlistForm() {
             </div>
           </div>
           <div>
-            <label htmlFor="last_name" className="block text-sm font-medium text-white mb-2">Last Name</label>
+            <label htmlFor="last_name" className="block text sm font-medium text-white mb-2">Last Name</label>
             <div className="relative">
               <User size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-white/40" />
               <input type="text" id="last_name" value={formData.last_name} onChange={(e) => setFormData(prev => ({ ...prev, last_name: e.target.value }))} className="w-full bg-neutral-900 text-white placeholder-white/40 pl-10 pr-4 py-3 border border-white/10 focus:border-white/40 focus:outline-none transition-colors duration-300" placeholder="Your last name" />
@@ -161,17 +161,32 @@ export default function WaitlistForm() {
           </div>
         </div>
 
-        {/* reCAPTCHA */}
-        <div className="pt-2">
-          <ReCAPTCHA sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || ''} theme="dark" onChange={(token) => setCaptchaToken(token)} />
-        </div>
+        {hasSiteKey ? (
+          <div className="flex justify-center">
+            <ReCAPTCHA
+              sitekey={siteKey as string}
+              onChange={(token) => setCaptchaToken(token)}
+              onExpired={() => setCaptchaToken(null)}
+              theme="dark"
+            />
+          </div>
+        ) : (
+          <p className="text-xs text-red-400 text-center">Captcha not configured. Set NEXT_PUBLIC_RECAPTCHA_SITE_KEY.</p>
+        )}
 
-        <button type="submit" disabled={isSubmitting || !formData.email || !captchaToken} className="w-full btn-outline-light disabled:opacity-50 disabled:cursor-not-allowed">
+        <button type="submit" disabled={isSubmitting || !formData.email || !captchaToken || !hasSiteKey} className="w-full btn-outline-light disabled:opacity-50 disabled:cursor-not-allowed">
           {isSubmitting ? 'Joining...' : 'Join Waitlist'}
         </button>
 
         <p className="text-xs text-white/50 text-center">By joining our waitlist, you agree to receive updates about Daze. You can unsubscribe at any time.</p>
       </form>
     </div>
+  )
+}
+
+export default function WaitlistForm() {
+  const siteKey = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || ''
+  return (
+    <WaitlistInner siteKey={siteKey} />
   )
 } 
