@@ -50,7 +50,7 @@ export default function HeroWithVideo() {
           <p className="text-xl md:text-2xl text-white/85 mb-12 max-w-3xl mx-auto leading-relaxed animate-slide-up">
             welcome,
             {' '}
-            <Link href="/sleepwalker-secret" className="underline decoration-dotted underline-offset-4 hover:decoration-white/80 transition-colors">
+            <Link href="/sleepwalker-secret" className="no-underline hover:text-white transition-colors">
               sleepwalker
             </Link>
           </p>

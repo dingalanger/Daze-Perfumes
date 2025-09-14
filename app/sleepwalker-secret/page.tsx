@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from 'react'
 import Header from '@/components/Header'
-import Footer from '@/components/Footer'
+import { useRouter } from 'next/navigation'
 
 function isWithinWindow(date: Date) {
   const start = new Date(date)
@@ -14,6 +14,7 @@ function isWithinWindow(date: Date) {
 
 export default function SleepwalkerSecret() {
   const [now, setNow] = useState<Date>(new Date())
+  const router = useRouter()
 
   useEffect(() => {
     const id = setInterval(() => setNow(new Date()), 30_000)
@@ -21,6 +22,13 @@ export default function SleepwalkerSecret() {
   }, [])
 
   const open = useMemo(() => isWithinWindow(now), [now])
+
+  useEffect(() => {
+    if (!open) {
+      const id = setTimeout(() => router.push('/'), 4000)
+      return () => clearTimeout(id)
+    }
+  }, [open, router])
 
   return (
     <main className="min-h-screen bg-transparent">
@@ -30,7 +38,6 @@ export default function SleepwalkerSecret() {
           {!open && (
             <div className="max-w-3xl mx-auto text-center">
               <h1 className="text-5xl font-serif">Looking for something?</h1>
-              <p className="mt-4 text-white/70">Come back between 3–5am. If you know, you know.</p>
             </div>
           )}
 
@@ -71,7 +78,7 @@ export default function SleepwalkerSecret() {
           )}
         </div>
       </section>
-      <Footer />
+      {/* Footer removed per request */}
     </main>
   )
 }
