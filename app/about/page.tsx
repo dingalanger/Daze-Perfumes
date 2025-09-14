@@ -3,7 +3,7 @@
 import React, { useEffect, useRef } from 'react'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
-import Image from 'next/image'
+// removed media imports
 
 export default function AboutPage() {
   const sections = [
@@ -14,12 +14,7 @@ export default function AboutPage() {
   ]
 
   // Shifted image mapping: hero uses founder1, then sections get the next images, last is placeholder
-  const shiftedImages: (string | null)[] = [
-    '/images/about_lab.jpg',
-    '/images/about_winter-columbia.jpg',
-    null,
-    null,
-  ]
+  const shiftedImages: (string | null)[] = [null, null, null, null]
 
   const containerRef = useRef<HTMLDivElement | null>(null)
 
@@ -70,11 +65,8 @@ export default function AboutPage() {
     <>
       <Header />
 
-      {/* Background video */}
-      <div className="fixed inset-0 -z-10 overflow-hidden">
-        <video className="absolute inset-0 w-full h-full object-cover" src="/videos/O2.mp4" autoPlay muted loop playsInline preload="metadata" />
-        <div className="absolute inset-0 bg-black/40" />
-      </div>
+      {/* Dreamy fog background (no media) */}
+      <div className="fixed inset-0 -z-10 overflow-hidden bg-sleep-fog" />
 
       <main ref={containerRef} className="relative z-0">
         {/* Hero with image */}
@@ -86,10 +78,7 @@ export default function AboutPage() {
                 <p className="text-white/80 text-lg">From steamed rice and boba tea to mooncakes and midnight snacks, Daze bottles the cravings and comforts of home. Our founder, Alex Jason Li—a Chinese‑American kid who’s always sniffing everything—turned his love of unique smells into a gourmand perfume house. Every fragrance is a little taste of his memories that everyone is welcome to enjoy.</p>
               </div>
               <div className="md:order-1">
-                <div className="relative aspect-[4/3] md:aspect-[5/4] w-full overflow-hidden rounded-3xl border border-white/10 bg-neutral-900">
-                  <Image src="/images/about_founder1.jpg" alt="Founder" fill sizes="(max-width: 768px) 100vw, 45vw" priority unoptimized className="object-cover" />
-                  <div className="absolute inset-0 bg-black/10" />
-                </div>
+                <div className="relative aspect-[4/3] md:aspect-[5/4] w-full overflow-hidden rounded-3xl border border-white/10 bg-sleep-fog" />
               </div>
             </div>
           </div>
@@ -118,26 +107,11 @@ export default function AboutPage() {
                       </p>
                     </div>
 
-                    {/* Image / Placeholder */}
+                    {/* Placeholder card (no media) */}
                     <div className={`${isEven ? 'md:order-2' : ''}`} data-parallax data-speed="0.08">
-                      {img ? (
-                        <div className="relative aspect-[4/3] md:aspect-[5/4] w-full overflow-hidden rounded-3xl border border-white/10 bg-neutral-900">
-                          <Image
-                            src={img}
-                            alt={s.title}
-                            fill
-                            sizes="(max-width: 768px) 100vw, 45vw"
-                            loading="lazy"
-                            unoptimized
-                            className="object-cover"
-                          />
-                          <div className="absolute inset-0 bg-black/10" />
-                        </div>
-                      ) : (
-                        <div className="relative aspect-[4/3] md:aspect-[5/4] w-full overflow-hidden rounded-3xl border border-white/10 bg-neutral-800 grid place-items-center">
-                          <span className="text-white/60">Image coming soon</span>
-                        </div>
-                      )}
+                      <div className="relative aspect-[4/3] md:aspect-[5/4] w-full overflow-hidden rounded-3xl border border-white/10 bg-sleep-fog grid place-items-center">
+                        <span className="text-white/60">A gentle fog rolls in</span>
+                      </div>
                     </div>
                   </article>
                 )

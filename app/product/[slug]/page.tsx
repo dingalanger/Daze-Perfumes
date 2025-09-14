@@ -5,7 +5,7 @@ import { products } from '@/lib/products'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import Link from 'next/link'
-import Image from 'next/image'
+// media removed
 
 type CartItem = { id: string; name: string; price: number; quantity?: number }
 
@@ -33,7 +33,7 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
   const product = products.find(p => p.slug === params.slug)
   const [size, setSize] = useState<'50ml' | '100ml'>('50ml')
   const [qty, setQty] = useState<number>(1)
-  if (!product) return <div className="min-h-screen bg-black text-white flex items-center justify-center">Not found</div>
+  if (!product) return <div className="min-h-screen bg-daze-black text-daze-white flex items-center justify-center">Not found</div>
 
   const price = size === '100ml' ? 150 : product.price
 
@@ -43,57 +43,58 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
   }
 
   return (
-    <main className="min-h-screen bg-black pt-20">
+    <main className="min-h-screen bg-transparent pt-20">
       <Header />
 
       <section className="section-padding">
         <div className="container-custom grid grid-cols-1 lg:grid-cols-2 gap-10">
-          {/* Product image */}
-          <div className="relative bg-neutral-900 border border-white/10 rounded-lg aspect-[4/5] overflow-hidden">
-            {product.image && (
-              <Image src={product.image} alt={product.name} fill className="object-cover" />
-            )}
+          {/* Placeholder visual (no image) */}
+          <div className="relative border border-white/10 rounded-lg aspect-[4/5] overflow-hidden bg-sleep-fog grid place-items-center">
+            <div className="text-center">
+              <div className="uppercase tracking-widest text-xs text-daze-white/60">Eau de Parfum</div>
+              <div className="mt-2 text-3xl font-serif text-daze-white">{product.name}</div>
+            </div>
           </div>
 
           {/* Product info */}
           <div>
-            <h1 className="text-3xl md:text-4xl font-serif font-bold text-white mb-3">{product.name} Eau De Parfum</h1>
-            <p className="text-white/80 mb-6">${price}.00</p>
+            <h1 className="text-3xl md:text-4xl font-serif font-bold text-daze-white mb-3">{product.name} Eau De Parfum</h1>
+            <p className="text-daze-white/80 mb-6">${price}.00</p>
 
             {/* Size and quantity */}
             <div className="grid grid-cols-2 gap-4 mb-6">
               <div>
-                <p className="text-sm text-white/60 mb-2">Size</p>
+                <p className="text-sm text-daze-white/60 mb-2">Size</p>
                 <div className="flex gap-2">
-                  <button onClick={() => setSize('50ml')} className={`px-4 py-2 ${size==='50ml' ? 'bg-white text-black' : 'border border-white/20 text-white'}`}>50ml</button>
-                  <button onClick={() => setSize('100ml')} className={`px-4 py-2 ${size==='100ml' ? 'bg-white text-black' : 'border border-white/20 text-white'}`}>100ml</button>
+                  <button onClick={() => setSize('50ml')} className={`px-4 py-2 ${size==='50ml' ? 'bg-daze-fog text-daze-black' : 'border border-daze-fog text-daze-fog'}`}>50ml</button>
+                  <button onClick={() => setSize('100ml')} className={`px-4 py-2 ${size==='100ml' ? 'bg-daze-fog text-daze-black' : 'border border-daze-fog text-daze-fog'}`}>100ml</button>
                 </div>
               </div>
               <div>
-                <p className="text-sm text-white/60 mb-2">Quantity</p>
+                <p className="text-sm text-daze-white/60 mb-2">Quantity</p>
                 <div className="flex">
-                  <input className="w-20 bg-neutral-900 border border-white/20 text-white px-3 py-2" value={qty} onChange={(e) => setQty(Math.max(1, parseInt(e.target.value || '1')))} />
+                  <input className="w-20 bg-black/20 border border-white/10 text-daze-white px-3 py-2" value={qty} onChange={(e) => setQty(Math.max(1, parseInt(e.target.value || '1')))} />
                 </div>
               </div>
             </div>
 
-            <button className="w-full btn-outline-light mb-4" onClick={add}>Preorder now</button>
+            <button className="w-full btn-secondary mb-4" onClick={add}>Preorder now</button>
 
-            <p className="text-white/80 mb-8">Arrives soon — shipping included</p>
+            <p className="text-daze-white/80 mb-8">Arrives soon — shipping included</p>
 
             <div className="prose prose-invert max-w-none">
-              <h2 className="text-xl font-semibold text-white mb-3">Description</h2>
-              <p className="text-white/80 mb-6">{product.longDescription}</p>
+              <h2 className="text-xl font-semibold text-daze-white mb-3">Description</h2>
+              <p className="text-daze-white/80 mb-6">{product.longDescription}</p>
 
-              <h3 className="text-lg font-semibold text-white mb-3">Notes</h3>
-              <ul className="list-disc pl-6 text-white/80">
+              <h3 className="text-lg font-semibold text-daze-white mb-3">Notes</h3>
+              <ul className="list-disc pl-6 text-daze-white/80">
                 {product.notes.map(n => (
                   <li key={n}>{n}</li>
                 ))}
               </ul>
             </div>
 
-            <div className="mt-8 text-sm text-white/60">
+            <div className="mt-8 text-sm text-daze-white/60">
               <Link href="/collection" className="underline">Back to collection</Link>
             </div>
           </div>

@@ -2,13 +2,13 @@ import type { Metadata } from 'next'
 import './globals.css'
 
 export const metadata: Metadata = {
-  title: 'Daze - Luxury Gourmand & Chinese-Inspired Fragrances',
-  description: 'Discover the art of luxury perfumery with Daze. Our collection features exquisite gourmand and Chinese-inspired fragrances that tell stories through scent.',
-  keywords: 'luxury perfumes, gourmand fragrances, Chinese-inspired perfumes, Daze, artisanal fragrances',
+  title: 'Daze | Sleepwalker Club',
+  description: 'Step into a foggy, dreamlike world of scent. Join the Sleepwalker Club for secret micro-drops between 3–5am.',
+  keywords: 'perfume, fragrances, dreamlike, sleepwalker club, micro-drops, daze',
   authors: [{ name: 'Daze' }],
   openGraph: {
-    title: 'Daze - Luxury Gourmand & Chinese-Inspired Fragrances',
-    description: 'Discover the art of luxury perfumery with Daze. Our collection features exquisite gourmand and Chinese-inspired fragrances.',
+    title: 'Daze | Sleepwalker Club',
+    description: 'A soft, hazy, surreal world of scent. Secret drops at 3–5am.',
     type: 'website',
   },
 }
@@ -20,8 +20,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className="antialiased">
-        {children}
+      <body className="antialiased bg-daze-black text-daze-white">
+        <div className="min-h-screen bg-sleep-fog">
+          {children}
+        </div>
       </body>
     </html>
   )
