@@ -5,11 +5,9 @@ import Header from '@/components/Header'
 import { useRouter } from 'next/navigation'
 
 function isWithinWindow(date: Date) {
-  const start = new Date(date)
-  start.setHours(3, 0, 0, 0)
-  const end = new Date(date)
-  end.setHours(5, 0, 0, 0)
-  return date >= start && date <= end
+  const hour = date.getHours()
+  // Accessible from 8pm–5am local time
+  return hour >= 20 || hour < 5
 }
 
 export default function SleepwalkerSecret() {
