@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import './globals.css'
+import ClientShell from '@/components/ClientShell'
 
 export const metadata: Metadata = {
   title: 'Daze - Luxury Gourmand & Chinese-Inspired Fragrances',
@@ -21,7 +22,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="antialiased">
-        {children}
+        <ClientShell>
+          {children}
+        </ClientShell>
       </body>
     </html>
   )
