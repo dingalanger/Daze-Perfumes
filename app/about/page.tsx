@@ -17,7 +17,7 @@ export default function AboutPage() {
   const shiftedImages: (string | null)[] = [
     '/images/about_lab.jpg',
     '/images/about_winter-columbia.jpg',
-    '/images/about_founder.jpg',
+    null,
     null,
   ]
 
