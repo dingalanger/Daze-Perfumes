@@ -17,11 +17,11 @@ export default function HomePage() {
         </div>
         <div className="container-custom relative">
           <div className="max-w-3xl mx-auto text-center">
-            <span className="inline-block px-3 py-1 rounded-full text-xs tracking-widest uppercase bg-white/5 border border-white/10 text-white/70">Experimental</span>
-            <h1 className="mt-6 text-5xl md:text-6xl font-serif leading-tight text-balance">
+            <span className="inline-block px-3 py-1 rounded-full text-xs tracking-widest uppercase bg-black/5 border border-black/10 text-vi-soft-black/70">Experimental</span>
+            <h1 className="mt-6 text-5xl md:text-6xl font-sans font-extrabold leading-tight text-balance text-vi-soft-black">
               Step into the Sleepwalker Club
             </h1>
-            <p className="mt-5 text-lg text-daze-white/80">
+            <p className="mt-5 text-lg text-vi-soft-black/80">
               A foggy, dreamlike world of scent. Free to join. Secret micro-drops unlock between 3–5am.
             </p>
             <div className="mt-8 flex items-center justify-center gap-4">

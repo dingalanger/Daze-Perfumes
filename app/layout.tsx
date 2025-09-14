@@ -21,7 +21,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className="antialiased bg-daze-black text-daze-white">
+      <body className="antialiased bg-vi-pearl-white text-vi-soft-black">
         <ClientShell>
           <div className="min-h-screen bg-sleep-fog">
             {children}

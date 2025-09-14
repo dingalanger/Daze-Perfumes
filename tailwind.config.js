@@ -23,11 +23,17 @@ module.exports = {
         'daze-peach': '#F8D4C4',
         'daze-smoke': '#1A1A1D',
         'daze-mist': '#E9ECF5',
+        // Visual Identity tokens
+        'vi-fog-lavender': '#C9C3E6',
+        'vi-pearl-white': '#F8F8F6',
+        'vi-soft-black': '#1E1E1E',
+        'vi-muted-jade': '#A9CBB7',
+        'vi-warm-cream': '#F2E9DA',
       },
       fontFamily: {
-        'serif': ['Playfair Display', 'serif'],
-        'whimsy': ['Fraunces', 'serif'],
-        'sans': ['Inter', 'sans-serif'],
+        'serif': ['EB Garamond', 'serif'],
+        'whimsy': ['EB Garamond', 'serif'],
+        'sans': ['Inter', 'ui-sans-serif', 'system-ui', 'Helvetica Neue', 'Arial', 'sans-serif'],
         'cursive': ['Dancing Script', 'cursive'],
       },
       animation: {
