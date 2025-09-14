@@ -51,10 +51,9 @@ export default function PortalOverlay({ onEntered }: PortalOverlayProps) {
   const circumference = 2 * Math.PI * ringRadius
   const dash = circumference * (1 - progress / 100)
   const t = Math.max(0, Math.min(1, progress / 100))
-  const overlayOpacity = 0.85 - 0.45 * t
 
   return (
-    <div className="fixed inset-0 z-[1000]" style={{ background: `rgba(5,5,6,${0.92 * (1 - t * 0.3)})` }}>
+    <div className="fixed inset-0 z-[1000]" style={{ background: 'rgba(5,5,6,0.92)' }}>
       {/* Subtle background gradient */}
       <div className="absolute inset-0" style={{
         background: 'radial-gradient(1200px 800px at -10% -20%, rgba(255,255,255,0.06), transparent 60%), radial-gradient(1000px 700px at 110% 10%, rgba(255,255,255,0.05), transparent 60%), radial-gradient(800px 600px at 50% 120%, rgba(255,255,255,0.04), transparent 60%)'
@@ -64,9 +63,9 @@ export default function PortalOverlay({ onEntered }: PortalOverlayProps) {
       <div
         className="absolute inset-0"
         style={{
-          WebkitMaskImage: `radial-gradient(circle at 50% 50%, rgba(0,0,0,1) ${radiusPercent}, rgba(0,0,0,0) calc(${radiusPercent} + 1%))`,
-          maskImage: `radial-gradient(circle at 50% 50%, rgba(0,0,0,1) ${radiusPercent}, rgba(0,0,0,0) calc(${radiusPercent} + 1%))`,
-          background: `rgba(0,0,0,${overlayOpacity.toFixed(2)})`
+          WebkitMaskImage: `radial-gradient(circle at 50% 50%, rgba(0,0,0,0) ${radiusPercent}, rgba(0,0,0,1) calc(${radiusPercent} + 1%))`,
+          maskImage: `radial-gradient(circle at 50% 50%, rgba(0,0,0,0) ${radiusPercent}, rgba(0,0,0,1) calc(${radiusPercent} + 1%))`,
+          background: 'rgba(0,0,0,0.85)'
         }}
       />
 
