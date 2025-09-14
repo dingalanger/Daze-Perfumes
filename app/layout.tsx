@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import './globals.css'
+import ClientShell from '../components/ClientShell'
 
 export const metadata: Metadata = {
   title: 'Daze | Sleepwalker Club',
@@ -21,9 +22,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="antialiased bg-daze-black text-daze-white">
-        <div className="min-h-screen bg-sleep-fog">
-          {children}
-        </div>
+        <ClientShell>
+          <div className="min-h-screen bg-sleep-fog">
+            {children}
+          </div>
+        </ClientShell>
       </body>
     </html>
   )

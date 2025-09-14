@@ -7,8 +7,14 @@ export default function HomePage() {
   return (
     <main className="min-h-screen bg-transparent">
       <Header />
-      <section className="relative pt-28 md:pt-32 pb-20">
+      <section className="relative pt-28 md:pt-32 pb-20 overflow-hidden">
         <div className="absolute inset-0 bg-sleep-fog pointer-events-none" />
+        {/* Floating foggy blobs */}
+        <div className="pointer-events-none">
+          <div className="absolute -top-24 -left-24 w-[420px] h-[420px] rounded-full bg-daze-lavender/18 blur-3xl animate-float" />
+          <div className="absolute top-10 -right-24 w-[360px] h-[360px] rounded-full bg-daze-fog/18 blur-3xl animate-float-delayed" />
+          <div className="absolute bottom-[-120px] left-1/4 w-[500px] h-[500px] rounded-full bg-daze-peach/14 blur-3xl animate-float-slow" />
+        </div>
         <div className="container-custom relative">
           <div className="max-w-3xl mx-auto text-center">
             <span className="inline-block px-3 py-1 rounded-full text-xs tracking-widest uppercase bg-white/5 border border-white/10 text-white/70">Experimental</span>
