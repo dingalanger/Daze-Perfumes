@@ -48,20 +48,34 @@ export default function PortalOverlay({ onEntered }: PortalOverlayProps) {
   const circumference = 2 * Math.PI * radius
   const dash = circumference * (1 - progress / 100)
 
-  return (
-    <div className="fixed inset-0 z-[1000] bg-daze-black/90 backdrop-blur-md">
-      {/* Background fog and floating blobs */}
-      <div className="absolute inset-0 bg-sleep-fog" />
-      <div className="absolute -top-20 -left-24 w-[420px] h-[420px] rounded-full bg-daze-lavender/18 blur-3xl animate-float" />
-      <div className="absolute top-1/3 -right-24 w-[360px] h-[360px] rounded-full bg-daze-fog/18 blur-3xl animate-float-delayed" />
-      <div className="absolute bottom-[-120px] left-1/4 w-[500px] h-[500px] rounded-full bg-daze-peach/14 blur-3xl animate-float-slow" />
+  const maskSize = `${Math.max(0, Math.min(100, progress))}%`
 
-      <div className="relative h-full flex items-center justify-center px-6">
+  return (
+    <div className="fixed inset-0 z-[1000] bg-daze-black">
+      {/* Background fog */}
+      <div className="absolute inset-0 bg-sleep-fog" />
+
+      {/* Parting fog mask: reveals content as you hold */}
+      <div
+        className="absolute inset-0"
+        style={{
+          WebkitMaskImage: `radial-gradient(circle at 50% 50%, rgba(0,0,0,1) ${maskSize}, rgba(0,0,0,0) calc(${maskSize} + 1%))`,
+          maskImage: `radial-gradient(circle at 50% 50%, rgba(0,0,0,1) ${maskSize}, rgba(0,0,0,0) calc(${maskSize} + 1%))`,
+          background: 'rgba(0,0,0,0.85)'
+        }}
+      />
+
+      {/* Floating dark blobs for ambiance */}
+      <div className="absolute -top-20 -left-24 w-[420px] h-[420px] rounded-full bg-vi-fog-lavender/18 blur-3xl animate-float" />
+      <div className="absolute top-1/3 -right-24 w-[360px] h-[360px] rounded-full bg-vi-muted-jade/18 blur-3xl animate-float-delayed" />
+      <div className="absolute bottom-[-120px] left-1/4 w-[500px] h-[500px] rounded-full bg-vi-warm-cream/14 blur-3xl animate-float-slow" />
+
+      <div className="relative h-full flex items-center justify-center px-6 pointer-events-none">
         <div className="text-center max-w-md">
           <h1 className="font-serif text-4xl md:text-5xl">DAZE</h1>
           <p className="mt-3 text-daze-white/80">A soft, hazy, slightly surreal world of scent.</p>
 
-          <div className="mt-10 inline-flex items-center justify-center">
+          <div className="mt-10 inline-flex items-center justify-center pointer-events-auto">
             <button
               onMouseDown={() => setHolding(true)}
               onMouseUp={() => setHolding(false)}
