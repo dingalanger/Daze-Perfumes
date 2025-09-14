@@ -50,9 +50,11 @@ export default function PortalOverlay({ onEntered }: PortalOverlayProps) {
   const ringRadius = 44
   const circumference = 2 * Math.PI * ringRadius
   const dash = circumference * (1 - progress / 100)
+  const t = Math.max(0, Math.min(1, progress / 100))
+  const overlayOpacity = 0.85 - 0.45 * t
 
   return (
-    <div className="fixed inset-0 z-[1000] bg-[rgba(5,5,6,0.92)]">
+    <div className="fixed inset-0 z-[1000]" style={{ background: `rgba(5,5,6,${0.92 * (1 - t * 0.3)})` }}>
       {/* Subtle background gradient */}
       <div className="absolute inset-0" style={{
         background: 'radial-gradient(1200px 800px at -10% -20%, rgba(255,255,255,0.06), transparent 60%), radial-gradient(1000px 700px at 110% 10%, rgba(255,255,255,0.05), transparent 60%), radial-gradient(800px 600px at 50% 120%, rgba(255,255,255,0.04), transparent 60%)'
@@ -64,10 +66,25 @@ export default function PortalOverlay({ onEntered }: PortalOverlayProps) {
         style={{
           WebkitMaskImage: `radial-gradient(circle at 50% 50%, rgba(0,0,0,1) ${radiusPercent}, rgba(0,0,0,0) calc(${radiusPercent} + 1%))`,
           maskImage: `radial-gradient(circle at 50% 50%, rgba(0,0,0,1) ${radiusPercent}, rgba(0,0,0,0) calc(${radiusPercent} + 1%))`,
-          background: 'rgba(0,0,0,0.85)'
+          background: `rgba(0,0,0,${overlayOpacity.toFixed(2)})`
         }}
       />
 
+      {/* Side clouds (placeholders) */}
+      <img
+        src="/images/cloud-placeholder.svg"
+        alt="Cloud left"
+        className="pointer-events-none select-none absolute left-[-160px] top-1/4 w-[520px] opacity-10"
+        style={{ transform: `translateX(${(-60 + 60 * t).toFixed(1)}px) scale(${1 + t * 0.05})` }}
+        draggable={false}
+      />
+      <img
+        src="/images/cloud-placeholder.svg"
+        alt="Cloud right"
+        className="pointer-events-none select-none absolute right-[-160px] top-1/3 w-[520px] opacity-10"
+        style={{ transform: `translateX(${(60 - 60 * t).toFixed(1)}px) scale(${1 + t * 0.05})` }}
+        draggable={false}
+      />
       {/* Ambient floating blobs (theme-agnostic) */}
       <div className="absolute -top-24 -left-28 w-[420px] h-[420px] rounded-full bg-white/8 blur-3xl animate-float" />
       <div className="absolute top-1/3 -right-24 w-[360px] h-[360px] rounded-full bg-white/8 blur-3xl animate-float-delayed" />
@@ -85,7 +102,8 @@ export default function PortalOverlay({ onEntered }: PortalOverlayProps) {
               onMouseLeave={() => setHolding(false)}
               onTouchStart={() => setHolding(true)}
               onTouchEnd={() => setHolding(false)}
-              className="relative w-28 h-28 rounded-full grid place-items-center border border-white/20 bg-black/30 hover:bg-black/20 transition-colors"
+              aria-label="Hold to enter"
+              className="group relative w-28 h-28 rounded-full grid place-items-center border border-white/20 bg-black/30 transition-colors hover:bg-black/20 hover:shadow-[0_0_0_6px_rgba(255,255,255,0.06),0_0_40px_rgba(255,255,255,0.08)]"
             >
               <svg className="absolute inset-0" viewBox="0 0 100 100">
                 <circle cx="50" cy="50" r={ringRadius} stroke="rgba(255,255,255,0.15)" strokeWidth="2" fill="none" />
@@ -99,7 +117,7 @@ export default function PortalOverlay({ onEntered }: PortalOverlayProps) {
                   strokeDasharray={circumference}
                   strokeDashoffset={dash}
                   strokeLinecap="round"
-                  style={{ transition: holding ? 'stroke-dashoffset 0.06s linear' : 'stroke-dashoffset 0.2s ease' }}
+                  style={{ transition: `${holding ? 'stroke-dashoffset 0.06s linear' : 'stroke-dashoffset 0.2s ease'}, stroke 0.2s ease` }}
                   transform="rotate(-90 50 50)"
                 />
                 <defs>
@@ -109,7 +127,7 @@ export default function PortalOverlay({ onEntered }: PortalOverlayProps) {
                   </linearGradient>
                 </defs>
               </svg>
-              <span className="text-xs uppercase tracking-widest text-white/80">Hold to enter</span>
+              <span className="text-xs uppercase tracking-widest text-white/85 transition-opacity group-hover:opacity-100">Hold to enter</span>
             </button>
           </div>
 
