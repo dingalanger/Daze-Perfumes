@@ -48,29 +48,21 @@ export default function HeroWithVideo() {
           </div>
 
           <p className="text-xl md:text-2xl text-white/85 mb-12 max-w-3xl mx-auto leading-relaxed animate-slide-up">
-            Discover the art of luxury perfumery where gourmand delights meet the elegance of Chinese tradition. Each fragrance tells a story.
+            welcome,
+            {' '}
+            <Link href="/sleepwalker-secret" className="no-underline hover:text-white transition-colors">
+              sleepwalker
+            </Link>
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 animate-slide-up-delayed">
             <Link href="/collection" className="btn-outline-light w-[220px] text-center">Explore Collection</Link>
             <Link href="/about" className="btn-outline-light w-[220px] text-center">Our Story</Link>
           </div>
-
-          <div className="mt-16 flex items-center justify-center space-x-8 text-sm text-white/70 animate-fade-in-delayed">
-            <span>Artisanal Craftsmanship</span>
-            <span>Luxury Ingredients</span>
-            <span>Timeless Elegance</span>
-          </div>
         </div>
       </div>
 
-      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-fade-in-slow">
-        <div className="w-6 h-10 border-2 border-white rounded-full flex justify-center">
-          <div className="w-1 h-3 bg-white rounded-full mt-2 animate-bounce"></div>
-        </div>
-      </div>
-
-      {/* Secret icon removed */}
+      {/* Footer tag list and scroll indicator removed per request */}
     </section>
   )
 } 
