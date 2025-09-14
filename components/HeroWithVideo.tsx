@@ -48,7 +48,11 @@ export default function HeroWithVideo() {
           </div>
 
           <p className="text-xl md:text-2xl text-white/85 mb-12 max-w-3xl mx-auto leading-relaxed animate-slide-up">
-            welcome, sleepwalker
+            welcome,
+            {' '}
+            <Link href="/sleepwalker-secret" className="underline decoration-dotted underline-offset-4 hover:decoration-white/80 transition-colors">
+              sleepwalker
+            </Link>
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 animate-slide-up-delayed">
