@@ -1,6 +1,5 @@
 import type { Metadata } from 'next'
 import '../globals.css'
-import ClientShell from '@/components/ClientShell'
 
 export const metadata: Metadata = {
   title: 'Daze | Dream Preview',
@@ -11,11 +10,9 @@ export default function DreamLayout({ children }: { children: React.ReactNode })
   return (
     <html lang="en">
       <body className="antialiased bg-daze-black text-daze-white">
-        <ClientShell>
-          <div className="min-h-screen bg-sleep-fog">
-            {children}
-          </div>
-        </ClientShell>
+        <div className="min-h-screen bg-sleep-fog">
+          {children}
+        </div>
       </body>
     </html>
   )

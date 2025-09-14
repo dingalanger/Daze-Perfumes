@@ -14,13 +14,16 @@ function isWithinWindow(date: Date) {
 
 export default function DropsPreviewPage() {
   const [now, setNow] = useState<Date>(new Date())
-  const [isMember, setIsMember] = useState<boolean>(false)
-  const [forceOpen, setForceOpen] = useState<boolean>(false)
+  const [isMember, setIsMember] = useState<boolean>(true)
+  const [forceOpen, setForceOpen] = useState<boolean>(true)
 
   useEffect(() => {
     const id = setInterval(() => setNow(new Date()), 30_000)
-    try { setIsMember(localStorage.getItem('sleepwalker_member') === 'true') } catch {}
-    try { setForceOpen(new URLSearchParams(window.location.search).get('open') === '1') } catch {}
+    // Preview is always open and member; query param can still close if open=0
+    try {
+      const q = new URLSearchParams(window.location.search)
+      if (q.get('open') === '0') setForceOpen(false)
+    } catch {}
     return () => clearInterval(id)
   }, [])
 
