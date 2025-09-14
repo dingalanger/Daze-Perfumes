@@ -7,35 +7,37 @@ type PortalOverlayProps = { onEntered: () => void }
 export default function PortalOverlay({ onEntered }: PortalOverlayProps) {
   const [holding, setHolding] = useState(false)
   const [progress, setProgress] = useState(0)
+  const [isHovering, setIsHovering] = useState(false)
   const holdStartRef = useRef<number | null>(null)
   const rafRef = useRef<number | null>(null)
 
   useEffect(() => {
-    if (!holding) {
-      setProgress((p) => (p > 0 && p < 100 ? Math.max(0, p - 2) : p))
-      return
-    }
-
     const requiredMs = 1500
-    const start = performance.now()
-    holdStartRef.current = start
+    let prev = performance.now()
 
     const tick = () => {
       const now = performance.now()
-      const elapsed = now - (holdStartRef.current || start)
-      const pct = Math.min(100, (elapsed / requiredMs) * 100)
-      setProgress(pct)
-      if (pct >= 100) {
-        try { localStorage.setItem('portal_entered', 'true') } catch {}
-        onEntered()
-        cancelAnimationFrame(rafRef.current || 0)
-        return
-      }
+      const delta = now - prev
+      prev = now
+      setProgress((p) => {
+        const dir = holding ? 1 : -1
+        const step = (delta / requiredMs) * 100 * dir
+        const next = Math.max(0, Math.min(100, p + step))
+        return next
+      })
       rafRef.current = requestAnimationFrame(tick)
     }
+
     rafRef.current = requestAnimationFrame(tick)
     return () => { if (rafRef.current) cancelAnimationFrame(rafRef.current) }
-  }, [holding, onEntered])
+  }, [holding])
+
+  useEffect(() => {
+    if (progress >= 100) {
+      try { localStorage.setItem('portal_entered', 'true') } catch {}
+      onEntered()
+    }
+  }, [progress, onEntered])
 
   useEffect(() => {
     // Prevent scroll while overlay is visible
@@ -92,7 +94,7 @@ export default function PortalOverlay({ onEntered }: PortalOverlayProps) {
       <div className="relative h-full flex items-center justify-center px-6 pointer-events-none">
         <div className="text-center max-w-md">
           <h1 className="font-serif text-4xl md:text-5xl text-white">DAZE</h1>
-          <p className="mt-3 text-white/80">Press and hold to enter.</p>
+          <p className="mt-3 text-white/80">Hold on to slip into the daze.</p>
 
           <div className="mt-10 inline-flex items-center justify-center pointer-events-auto">
             <button
@@ -101,16 +103,18 @@ export default function PortalOverlay({ onEntered }: PortalOverlayProps) {
               onMouseLeave={() => setHolding(false)}
               onTouchStart={() => setHolding(true)}
               onTouchEnd={() => setHolding(false)}
+              onMouseEnter={() => setIsHovering(true)}
+              onMouseOut={() => setIsHovering(false)}
               aria-label="Hold to enter"
-              className="group relative w-28 h-28 rounded-full grid place-items-center border border-white/20 bg-black/30 transition-colors hover:bg-black/20 hover:shadow-[0_0_0_6px_rgba(255,255,255,0.06),0_0_40px_rgba(255,255,255,0.08)]"
+              className="group relative w-28 h-28 rounded-full grid place-items-center border border-white/20 bg-black/30 transition-[background,box-shadow] duration-200 hover:bg-black/20 hover:shadow-[0_0_0_10px_rgba(147,197,253,0.18),0_0_80px_rgba(147,197,253,0.35)]"
             >
-              <svg className="absolute inset-0" viewBox="0 0 100 100">
+              <svg className="absolute inset-0" viewBox="0 0 100 100" style={{ filter: (isHovering || holding) ? 'drop-shadow(0 0 14px rgba(147,197,253,0.45))' : undefined }}>
                 <circle cx="50" cy="50" r={ringRadius} stroke="rgba(255,255,255,0.15)" strokeWidth="2" fill="none" />
                 <circle
                   cx="50"
                   cy="50"
                   r={ringRadius}
-                  stroke="url(#grad)"
+                  stroke={(isHovering || holding) ? 'url(#gradActive)' : 'url(#grad)'}
                   strokeWidth="4"
                   fill="none"
                   strokeDasharray={circumference}
@@ -123,6 +127,10 @@ export default function PortalOverlay({ onEntered }: PortalOverlayProps) {
                   <linearGradient id="grad" x1="0" y1="0" x2="1" y2="1">
                     <stop offset="0%" stopColor="#ffffff" stopOpacity="0.85" />
                     <stop offset="100%" stopColor="#ffffff" stopOpacity="0.45" />
+                  </linearGradient>
+                  <linearGradient id="gradActive" x1="0" y1="0" x2="1" y2="1">
+                    <stop offset="0%" stopColor="#9bc5ff" stopOpacity="0.95" />
+                    <stop offset="100%" stopColor="#7aaaff" stopOpacity="0.85" />
                   </linearGradient>
                 </defs>
               </svg>
