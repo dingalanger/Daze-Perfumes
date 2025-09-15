@@ -59,7 +59,15 @@ export default function SleepwalkerSecret() {
                     if (!arr.includes(email)) arr.push(email)
                     localStorage.setItem(key, JSON.stringify(arr))
                     localStorage.setItem('sleepwalker_member', 'true')
-                    alert('Welcome to the Sleepwalker’s Club.')
+                    // Elegant toast instead of blocking alert
+                    try {
+                      const el = document.createElement('div')
+                      el.className = 'fixed bottom-6 left-1/2 -translate-x-1/2 bg-white text-black px-4 py-2 rounded shadow-lg transition-opacity duration-500 opacity-0 z-[1000]'
+                      el.textContent = "Welcome to the Sleepwalker’s Club."
+                      document.body.appendChild(el)
+                      requestAnimationFrame(() => { el.classList.remove('opacity-0') })
+                      setTimeout(() => { el.classList.add('opacity-0'); setTimeout(() => el.remove(), 500) }, 1800)
+                    } catch {}
                     form.reset()
                   } catch {}
                 }}
