@@ -10,7 +10,7 @@ export default function HeroWithVideo() {
     const video = videoRef.current
     if (!video) return
 
-    video.src = '/videos/O1.mp4'
+    video.src = '/videos/O1 new.mp4'
     video.preload = 'auto'
     video.loop = true
     video.muted = true
