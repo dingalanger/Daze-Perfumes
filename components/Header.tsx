@@ -50,9 +50,6 @@ export default function Header() {
             <Link href="/search" className="p-2 text-white/80 hover:text-white transition-colors duration-300">
               <Search size={20} />
             </Link>
-            <Link href="/account" className="p-2 text-white/80 hover:text-white transition-colors duration-300">
-              <User size={20} />
-            </Link>
             <Link href="/checkout" className={`relative p-2 text-white/80 hover:text-white transition-colors duration-300 ${pulse ? 'animate-ping-once' : ''}`}>
               <ShoppingBag size={20} />
               {cartCount > 0 && (
