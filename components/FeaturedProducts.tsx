@@ -1,9 +1,8 @@
 'use client'
 
-import React from 'react'
+import React, { useEffect, useRef } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import { Crown } from 'lucide-react'
 import { products as featuredProducts } from '@/lib/products'
 
 function addToCart(item: { id: string; name: string; price: number; quantity?: number }) {
@@ -27,52 +26,71 @@ function showToast(message: string) {
 }
 
 export default function FeaturedProducts() {
+  const product = featuredProducts[0]
+  const marqueeRef = useRef<HTMLDivElement | null>(null)
+
+  useEffect(() => {
+    const el = marqueeRef.current
+    if (!el) return
+    const onMove = (e: MouseEvent) => {
+      const rect = el.getBoundingClientRect()
+      const cx = rect.left + rect.width / 2
+      const cy = rect.top + rect.height / 2
+      const dx = (e.clientX - cx) / rect.width
+      const dy = (e.clientY - cy) / rect.height
+      el.style.setProperty('--tx', `${dx * 8}px`)
+      el.style.setProperty('--ty', `${dy * 8}px`)
+    }
+    window.addEventListener('mousemove', onMove)
+    return () => window.removeEventListener('mousemove', onMove)
+  }, [])
+
   return (
     <section className="section-padding bg-black">
       <div className="container-custom">
-        <div className="text-center mb-16 animate-fade-in">
-          <h2 className="text-4xl md:text-5xl font-serif font-bold text-white mb-4">Featured Collection</h2>
-          <p className="text-xl text-white/70 max-w-2xl mx-auto">Discover our most beloved fragrances, each crafted with the finest ingredients and inspired by rich traditions.</p>
+        <div className="text-center mb-12 animate-fade-in">
+          <h2 className="text-4xl md:text-5xl font-serif font-bold text-white mb-3">Featured</h2>
+          <p className="text-white/70">One scent in focus.</p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-          {featuredProducts.map((product, index) => {
-            const isStallion = product.name === 'Stallion'
-            return (
-              <div key={product.id} className="group animate-slide-up" style={{ animationDelay: `${index * 0.1}s` }}>
-                <div className={`relative rounded-lg overflow-hidden card-hover ${isStallion ? 'card-gold-special' : 'bg-neutral-900'}`}>
-                  <Link href={`/product/${product.slug}`} className="block relative h-80 bg-neutral-900">
-                    {product.image ? (
-                      <Image src={product.image} alt={product.name} fill className={`object-cover opacity-90 transition-opacity group-hover:opacity-100 ${isStallion ? 'object-[50%_68%]' : ''}`} />
-                    ) : (
-                      <div className="absolute inset-0 flex items-center justify-center">
-                        <div className={`w-32 h-32 ${isStallion ? 'bg-white/10 border-white/30' : 'bg-white/5 border-white/10'} border rounded-full flex items-center justify-center`}>
-                          <span className="text-white text-xl font-serif font-semibold">{product.name.split(' ')[0]}</span>
-                        </div>
-                      </div>
-                    )}
-                  </Link>
+        <div ref={marqueeRef} className="relative max-w-6xl mx-auto">
+          {/* Lighting canvas */}
+          <div className="pointer-events-none absolute inset-0 -z-10">
+            <div className="absolute -top-28 -left-32 w-[520px] h-[520px] rounded-full bg-white/6 blur-3xl animate-float" />
+            <div className="absolute top-10 -right-24 w-[420px] h-[420px] rounded-full bg-white/5 blur-3xl animate-float-delayed" />
+            <div className="absolute bottom-[-160px] left-1/3 w-[620px] h-[620px] rounded-full bg-white/7 blur-3xl animate-float-slow" />
+          </div>
 
-                  {/* Category Badge */}
-                  <div className="absolute top-4 left-4 flex items-center gap-2">
-                    {isStallion && <Crown size={16} className="text-daze-gold drop-shadow-[0_1px_2px_rgba(0,0,0,0.6)]" />}
-                    <span className={`px-3 py-1 text-xs font-medium rounded-full backdrop-blur-sm ${isStallion ? 'badge-gold-minimal shadow-[0_2px_8px_rgba(0,0,0,0.3)]' : 'bg-black/70 text-white border border-white/20'}`}>{isStallion ? 'Zodiac — Limited Edition' : product.category}</span>
-                  </div>
+          {/* Marquee card */}
+          <div className="relative grid md:grid-cols-2 gap-10 items-center rounded-3xl border border-white/10 bg-gradient-to-b from-white/5 to-white/0 p-8 overflow-hidden">
+            <div className="absolute inset-0 opacity-30" style={{ transform: 'translate(var(--tx,0), var(--ty,0))' }}>
+              <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[900px] h-[900px] rounded-full bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.08),transparent_60%)]" />
+            </div>
 
-                  <div className="p-6">
-                    <div className="mb-2">
-                      <h3 className="text-lg font-semibold text-white"><Link href={`/product/${product.slug}`}>{product.name}</Link></h3>
-                    </div>
-                    <p className="text-sm text-white/70 mb-4 line-clamp-2">{product.shortDescription}</p>
-                    <div className="flex items-center justify-between">
-                      <span className="text-xl font-semibold text-white">$120</span>
-                      <button className="btn-outline-light" onClick={() => { addToCart({ id: product.id, name: product.name, price: product.price }); showToast('Preorder added to cart') }}>Preorder now</button>
-                    </div>
+            {/* Visual */}
+            <div className="relative">
+              <div className="relative aspect-[4/5] rounded-2xl overflow-hidden border border-white/10 bg-neutral-900">
+                {product?.image ? (
+                  <Image src={product.image} alt={product.name} fill className="object-cover opacity-90" />
+                ) : (
+                  <div className="absolute inset-0 grid place-items-center">
+                    <div className="w-48 h-64 bg-white/85 rounded-xl shadow-2xl" />
                   </div>
-                </div>
+                )}
               </div>
-            )
-          })}
+            </div>
+
+            {/* Copy */}
+            <div>
+              <h3 className="text-4xl md:text-5xl font-serif text-white">{product?.name}</h3>
+              <p className="mt-4 text-white/70 text-lg">{product?.longDescription}</p>
+              <div className="mt-6 flex items-center gap-4">
+                <span className="text-2xl font-semibold text-white">${product?.price}</span>
+                <Link href={`/product/${product?.slug}`} className="btn-outline-light">Explore</Link>
+                <button className="btn-light" onClick={() => { addToCart({ id: product!.id, name: product!.name, price: product!.price }); showToast('Preorder added to cart') }}>Preorder</button>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </section>
