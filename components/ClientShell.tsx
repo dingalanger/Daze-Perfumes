@@ -9,10 +9,8 @@ export default function ClientShell({ children }: { children: React.ReactNode })
 
   useEffect(() => {
     setMounted(true)
-    try {
-      const seen = localStorage.getItem('portal_entered') === 'true'
-      if (!seen) setShowPortal(true)
-    } catch {}
+    // Always show on each visit
+    setShowPortal(true)
   }, [])
 
   if (!mounted) return null
