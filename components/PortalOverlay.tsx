@@ -71,19 +71,34 @@ export default function PortalOverlay({ onEntered }: PortalOverlayProps) {
         }}
       />
 
-      {/* Side clouds (placeholders) */}
+      {/* Central clouds that drift outward as you hold */}
       <img
         src="/images/cloud-placeholder.svg"
         alt="Cloud left"
-        className="pointer-events-none select-none absolute left-[-160px] top-1/4 w-[520px] opacity-10"
-        style={{ transform: `translateX(${(-60 + 60 * t).toFixed(1)}px) scale(${1 + t * 0.05})` }}
+        className="pointer-events-none select-none absolute w-[520px] opacity-20"
+        style={{ left: '50%', top: '48%', transform: `translate(-50%, -50%) translateX(${(-220 * t).toFixed(1)}px) scale(${(1 + t * 0.08).toFixed(3)})` }}
         draggable={false}
       />
       <img
         src="/images/cloud-placeholder.svg"
         alt="Cloud right"
-        className="pointer-events-none select-none absolute right-[-160px] top-1/3 w-[520px] opacity-10"
-        style={{ transform: `translateX(${(60 - 60 * t).toFixed(1)}px) scale(${1 + t * 0.05})` }}
+        className="pointer-events-none select-none absolute w-[520px] opacity-20"
+        style={{ left: '50%', top: '52%', transform: `translate(-50%, -50%) translateX(${(220 * t).toFixed(1)}px) scale(${(1 + t * 0.08).toFixed(3)})` }}
+        draggable={false}
+      />
+      {/* Additional layers for richness */}
+      <img
+        src="/images/cloud-placeholder.svg"
+        alt="Cloud upper-left"
+        className="pointer-events-none select-none absolute w-[380px] opacity-15"
+        style={{ left: '50%', top: '40%', transform: `translate(-50%, -50%) translateX(${(-260 * t).toFixed(1)}px) scale(${(0.9 + t * 0.08).toFixed(3)})` }}
+        draggable={false}
+      />
+      <img
+        src="/images/cloud-placeholder.svg"
+        alt="Cloud lower-right"
+        className="pointer-events-none select-none absolute w-[380px] opacity-15"
+        style={{ left: '50%', top: '60%', transform: `translate(-50%, -50%) translateX(${(260 * t).toFixed(1)}px) scale(${(0.9 + t * 0.08).toFixed(3)})` }}
         draggable={false}
       />
       {/* Ambient floating blobs (theme-agnostic) */}
