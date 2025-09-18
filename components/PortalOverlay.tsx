@@ -75,14 +75,14 @@ export default function PortalOverlay({ onEntered }: PortalOverlayProps) {
       <img
         src="/images/cloud-placeholder.svg"
         alt="Cloud left"
-        className="pointer-events-none select-none absolute w-[680px] opacity-24"
+        className="pointer-events-none select-none absolute w-[680px] opacity-10"
         style={{ left: '50%', top: '48%', transform: `translate(-50%, -50%) translateX(${(-260 * t).toFixed(1)}px) scale(${(1 + t * 0.1).toFixed(3)})` }}
         draggable={false}
       />
       <img
         src="/images/cloud-placeholder.svg"
         alt="Cloud right"
-        className="pointer-events-none select-none absolute w-[680px] opacity-24"
+        className="pointer-events-none select-none absolute w-[680px] opacity-10"
         style={{ left: '50%', top: '52%', transform: `translate(-50%, -50%) translateX(${(260 * t).toFixed(1)}px) scale(${(1 + t * 0.1).toFixed(3)})` }}
         draggable={false}
       />
@@ -90,14 +90,14 @@ export default function PortalOverlay({ onEntered }: PortalOverlayProps) {
       <img
         src="/images/cloud-placeholder.svg"
         alt="Cloud upper-left"
-        className="pointer-events-none select-none absolute w-[520px] opacity-18"
+        className="pointer-events-none select-none absolute w-[520px] opacity-10"
         style={{ left: '50%', top: '40%', transform: `translate(-50%, -50%) translateX(${(-300 * t).toFixed(1)}px) scale(${(0.95 + t * 0.1).toFixed(3)})` }}
         draggable={false}
       />
       <img
         src="/images/cloud-placeholder.svg"
         alt="Cloud lower-right"
-        className="pointer-events-none select-none absolute w-[520px] opacity-18"
+        className="pointer-events-none select-none absolute w-[520px] opacity-10"
         style={{ left: '50%', top: '60%', transform: `translate(-50%, -50%) translateX(${(300 * t).toFixed(1)}px) scale(${(0.95 + t * 0.1).toFixed(3)})` }}
         draggable={false}
       />
