@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import Header from '@/components/Header'
 import { useRouter } from 'next/navigation'
+import { getSupabaseClient } from '@/lib/supabase'
 
 function isWithinWindow(date: Date) {
   const hour = date.getHours()
@@ -53,20 +54,21 @@ export default function SleepwalkerSecret() {
                     const fd = new FormData(form)
                     const email = String(fd.get('email') || '').trim()
                     if (!email) return
-                    const key = 'sleepwalker_members'
-                    const raw = localStorage.getItem(key)
-                    const arr = raw ? (JSON.parse(raw) as string[]) : []
-                    if (!arr.includes(email)) arr.push(email)
-                    localStorage.setItem(key, JSON.stringify(arr))
-                    localStorage.setItem('sleepwalker_member', 'true')
-                    // Elegant toast instead of blocking alert
+                    const supabase = getSupabaseClient()
+                    await supabase.auth.signInWithOtp({
+                      email,
+                      options: {
+                        emailRedirectTo: `${window.location.origin}/sleepwalker-callback`
+                      }
+                    })
+                    // Toast: instruct to check email
                     try {
                       const el = document.createElement('div')
                       el.className = 'fixed bottom-6 left-1/2 -translate-x-1/2 bg-white text-black px-4 py-2 rounded shadow-lg transition-opacity duration-500 opacity-0 z-[1000]'
-                      el.textContent = "Welcome to the Sleepwalker’s Club."
+                      el.textContent = 'Check your email to confirm.'
                       document.body.appendChild(el)
                       requestAnimationFrame(() => { el.classList.remove('opacity-0') })
-                      setTimeout(() => { el.classList.add('opacity-0'); setTimeout(() => el.remove(), 500) }, 1800)
+                      setTimeout(() => { el.classList.add('opacity-0'); setTimeout(() => el.remove(), 500) }, 2000)
                     } catch {}
                     form.reset()
                   } catch {}

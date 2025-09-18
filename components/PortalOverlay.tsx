@@ -71,34 +71,34 @@ export default function PortalOverlay({ onEntered }: PortalOverlayProps) {
         }}
       />
 
-      {/* Central clouds that drift outward as you hold */}
+      {/* Central clouds that drift outward as you hold (more layers + bigger) */}
       <img
         src="/images/cloud-placeholder.svg"
         alt="Cloud left"
-        className="pointer-events-none select-none absolute w-[520px] opacity-20"
-        style={{ left: '50%', top: '48%', transform: `translate(-50%, -50%) translateX(${(-220 * t).toFixed(1)}px) scale(${(1 + t * 0.08).toFixed(3)})` }}
+        className="pointer-events-none select-none absolute w-[680px] opacity-24"
+        style={{ left: '50%', top: '48%', transform: `translate(-50%, -50%) translateX(${(-260 * t).toFixed(1)}px) scale(${(1 + t * 0.1).toFixed(3)})` }}
         draggable={false}
       />
       <img
         src="/images/cloud-placeholder.svg"
         alt="Cloud right"
-        className="pointer-events-none select-none absolute w-[520px] opacity-20"
-        style={{ left: '50%', top: '52%', transform: `translate(-50%, -50%) translateX(${(220 * t).toFixed(1)}px) scale(${(1 + t * 0.08).toFixed(3)})` }}
+        className="pointer-events-none select-none absolute w-[680px] opacity-24"
+        style={{ left: '50%', top: '52%', transform: `translate(-50%, -50%) translateX(${(260 * t).toFixed(1)}px) scale(${(1 + t * 0.1).toFixed(3)})` }}
         draggable={false}
       />
       {/* Additional layers for richness */}
       <img
         src="/images/cloud-placeholder.svg"
         alt="Cloud upper-left"
-        className="pointer-events-none select-none absolute w-[380px] opacity-15"
-        style={{ left: '50%', top: '40%', transform: `translate(-50%, -50%) translateX(${(-260 * t).toFixed(1)}px) scale(${(0.9 + t * 0.08).toFixed(3)})` }}
+        className="pointer-events-none select-none absolute w-[520px] opacity-18"
+        style={{ left: '50%', top: '40%', transform: `translate(-50%, -50%) translateX(${(-300 * t).toFixed(1)}px) scale(${(0.95 + t * 0.1).toFixed(3)})` }}
         draggable={false}
       />
       <img
         src="/images/cloud-placeholder.svg"
         alt="Cloud lower-right"
-        className="pointer-events-none select-none absolute w-[380px] opacity-15"
-        style={{ left: '50%', top: '60%', transform: `translate(-50%, -50%) translateX(${(260 * t).toFixed(1)}px) scale(${(0.9 + t * 0.08).toFixed(3)})` }}
+        className="pointer-events-none select-none absolute w-[520px] opacity-18"
+        style={{ left: '50%', top: '60%', transform: `translate(-50%, -50%) translateX(${(300 * t).toFixed(1)}px) scale(${(0.95 + t * 0.1).toFixed(3)})` }}
         draggable={false}
       />
       {/* Ambient floating blobs (theme-agnostic) */}
@@ -153,7 +153,7 @@ export default function PortalOverlay({ onEntered }: PortalOverlayProps) {
             </button>
           </div>
 
-          <p className="mt-6 text-xs text-white/60">We’ll remember next time.</p>
+          <p className="mt-6 text-xs text-white/60">not all dreams are dreams</p>
         </div>
       </div>
     </div>
