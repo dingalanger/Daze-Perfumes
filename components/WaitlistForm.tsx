@@ -125,7 +125,7 @@ function WaitlistInner({ siteKey }: { siteKey?: string }) {
             </div>
           </div>
           <div>
-            <label htmlFor="last_name" className="block text sm font-medium text-white mb-2">Last Name</label>
+            <label htmlFor="last_name" className="block text-sm font-medium text-white mb-2">Last Name</label>
             <div className="relative">
               <User size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-white/40" />
               <input type="text" id="last_name" value={formData.last_name} onChange={(e) => setFormData(prev => ({ ...prev, last_name: e.target.value }))} className="w-full bg-neutral-900 text-white placeholder-white/40 pl-10 pr-4 py-3 border border-white/10 focus:border-white/40 focus:outline-none transition-colors duration-300" placeholder="Your last name" />

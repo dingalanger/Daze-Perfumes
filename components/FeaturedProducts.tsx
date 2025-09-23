@@ -45,6 +45,8 @@ export default function FeaturedProducts() {
     return () => window.removeEventListener('mousemove', onMove)
   }, [])
 
+  const mockSrc = '/images/Daze Mock1.png'
+
   return (
     <section className="section-padding bg-black">
       <div className="container-custom">
@@ -70,13 +72,7 @@ export default function FeaturedProducts() {
             {/* Visual */}
             <div className="relative">
               <div className="relative aspect-[4/5] rounded-2xl overflow-hidden border border-white/10 bg-neutral-900">
-                {product?.image ? (
-                  <Image src={product.image} alt={product.name} fill className="object-cover opacity-90" />
-                ) : (
-                  <div className="absolute inset-0 grid place-items-center">
-                    <div className="w-48 h-64 bg-white/85 rounded-xl shadow-2xl" />
-                  </div>
-                )}
+                <Image src={mockSrc} alt={product?.name || 'Product'} fill className="object-cover opacity-90" />
               </div>
             </div>
 
