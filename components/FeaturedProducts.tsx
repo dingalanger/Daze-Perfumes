@@ -65,7 +65,7 @@ export default function FeaturedProducts() {
 
           {/* Marquee card */}
           <div className="relative grid md:grid-cols-2 gap-10 items-center rounded-3xl border border-white/10 bg-gradient-to-b from-white/5 to-white/0 p-8 overflow-hidden">
-            <div className="absolute inset-0 opacity-30" style={{ transform: 'translate(var(--tx,0), var(--ty,0))' }}>
+            <div className="absolute inset-0 opacity-30 pointer-events-none" style={{ transform: 'translate(var(--tx,0), var(--ty,0))' }}>
               <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[900px] h-[900px] rounded-full bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.08),transparent_60%)]" />
             </div>
 

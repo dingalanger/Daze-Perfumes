@@ -14,13 +14,13 @@ export const products: Product[] = [
   {
     id: 'pear',
     slug: 'pear',
-    name: 'Pear',
+    name: 'Lychee',
     price: 120,
     category: 'Signature',
-    shortDescription: 'Juicy Asian pear with a crisp, cool sparkle and soft musk.',
+    shortDescription: 'Fresh lychee with rose dew, chilled white tea, and soft musk.',
     longDescription:
-      'Inspired by orchard mornings, Pear opens with a juicy Asian pear accord over a cool, dew‑kissed breeze. A silken veil of lily and white musk settles into a soft, modern skin scent.',
-    notes: ['Asian Pear', 'Lily Petals', 'White Musk', 'Cool Breeze'],
+      'Inspired by hazy afternoons, Lychee opens with crystalline lychee pulp over a cool white‑tea mist. A silken veil of rose dew and clean musk settles into a soft, modern skin scent.',
+    notes: ['Lychee', 'Rose Dew', 'White Tea', 'Soft Musk'],
     image: '/images/Pear.png',
   },
   {
