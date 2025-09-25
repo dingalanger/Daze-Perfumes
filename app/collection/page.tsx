@@ -67,11 +67,8 @@ export default function CollectionPage() {
             <div className="grid md:grid-cols-2 gap-10 items-center">
               {/* Visual */}
               <div className="relative order-2 md:order-1">
-                <div className="relative aspect-[4/5] rounded-3xl overflow-hidden border border-white/10 bg-gradient-to-b from-white/5 to-white/0">
-                  <div className="absolute inset-0 bg-[radial-gradient(60%_40%_at_50%_20%,rgba(255,255,255,0.12),transparent),radial-gradient(30%_30%_at_80%_80%,rgba(255,255,255,0.1),transparent)]" />
-                  <div className="absolute inset-0 grid place-items-center">
-                    <div className="w-48 h-64 bg-white/80 rounded-xl shadow-2xl" />
-                  </div>
+                <div className="relative aspect-[4/5] rounded-3xl overflow-hidden border border-white/10 bg-neutral-900">
+                  <Image src={'/images/Daze Mock1.png'} alt={product.name} fill className="object-contain p-8" />
                 </div>
               </div>
 

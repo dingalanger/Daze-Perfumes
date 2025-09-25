@@ -72,7 +72,7 @@ export default function FeaturedProducts() {
             {/* Visual */}
             <div className="relative">
               <div className="relative aspect-[4/5] rounded-2xl overflow-hidden border border-white/10 bg-neutral-900">
-                <Image src={mockSrc} alt={product?.name || 'Product'} fill className="object-cover opacity-90" />
+                <Image src={mockSrc} alt={product?.name || 'Product'} fill className="object-contain p-6" />
               </div>
             </div>
 

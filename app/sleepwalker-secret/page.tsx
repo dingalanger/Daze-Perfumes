@@ -84,7 +84,7 @@ export default function SleepwalkerSecret() {
                   <label htmlFor="email" className="block text-sm text-white/80">Email</label>
                   <input id="email" name="email" type="email" required placeholder="you@nightmail.com" className="mt-1 w-full bg-black/30 border border-white/10 rounded-md px-3 py-3 text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-white/30" />
                 </div>
-                <button type="submit" className="btn-primary w-full">Join</button>
+                <button type="submit" className="btn-light w-full">Join</button>
                 <p className="text-xs text-white/60">We’ll email only when the fog rolls in.</p>
               </form>
 
@@ -98,7 +98,7 @@ export default function SleepwalkerSecret() {
                       options: { redirectTo: `${window.location.origin}/sleepwalker-callback` }
                     })
                   }}
-                  className="btn-secondary"
+                  className="btn-outline-light"
                 >
                   Continue with Google
                 </button>

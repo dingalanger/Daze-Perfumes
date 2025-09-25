@@ -2,6 +2,7 @@
 
 import React, { useEffect, useRef } from 'react'
 import Link from 'next/link'
+import { ArrowRight } from 'lucide-react'
 
 export default function HeroWithVideo() {
   const videoRef = useRef<HTMLVideoElement | null>(null)
@@ -47,15 +48,17 @@ export default function HeroWithVideo() {
             <h1 className="text-5xl md:text-7xl font-serif font-bold tracking-wide text-white mb-4">DAZE</h1>
           </div>
 
-          <p className="text-xl md:text-2xl text-white/85 mb-3 max-w-3xl mx-auto leading-relaxed animate-slide-up">
-            Join our waitlist to get early access, secret drops, and invites.
+          <p className="text-2xl md:text-3xl text-white/90 mb-8 animate-slide-up">
+            Welcome, <Link href="/sleepwalker-secret" className="transition-all hover:text-white hover:[text-shadow:0_0_10px_rgba(255,255,255,0.6)] focus:[text-shadow:0_0_10px_rgba(255,255,255,0.6)]">sleepwalker</Link>
           </p>
-          <p className="text-white/80 mb-8 animate-slide-up">
-            welcome,{' '}
-            <Link href="/sleepwalker-secret" className="underline decoration-dotted underline-offset-4 hover:text-white">sleepwalker</Link>
-          </p>
-          <div className="animate-slide-up mb-8">
-            <Link href="/waitlist" className="inline-block px-6 py-3 bg-vi-fog-lavender hover:bg-vi-muted-jade text-black rounded-none transition-colors">Join the Waitlist</Link>
+          <div className="animate-slide-up mb-10">
+            <div className="group relative inline-block">
+              <span className="pointer-events-none absolute -inset-1 rounded-full bg-white/10 blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+              <Link href="/waitlist" className="relative inline-flex items-center justify-center w-[260px] sm:w-[300px] px-8 py-4 text-lg font-semibold rounded-full bg-white text-black border border-white/40 shadow-[0_0_0_1px_rgba(255,255,255,0.2)] hover:shadow-[0_0_24px_rgba(255,255,255,0.25)] transition-all duration-300 hover:scale-[1.02]">
+                Join the Waitlist
+                <ArrowRight size={20} className="ml-2 transition-transform group-hover:translate-x-1" />
+              </Link>
+            </div>
           </div>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 animate-slide-up-delayed">
