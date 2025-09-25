@@ -4,12 +4,12 @@ import ClientShell from '@/components/ClientShell'
 
 export const metadata: Metadata = {
   title: 'Daze - Luxury Gourmand & Chinese-Inspired Fragrances',
-  description: 'Discover the art of luxury perfumery with Daze. Our collection features exquisite gourmand and Chinese-inspired fragrances that tell stories through scent.',
+  description: 'A fog-soft house of gourmand and Chinese-inspired perfumes. Scents drift through shadow and glow—intimate, modern, and a little surreal.',
   keywords: 'luxury perfumes, gourmand fragrances, Chinese-inspired perfumes, Daze, artisanal fragrances',
   authors: [{ name: 'Daze' }],
   openGraph: {
     title: 'Daze - Luxury Gourmand & Chinese-Inspired Fragrances',
-    description: 'Discover the art of luxury perfumery with Daze. Our collection features exquisite gourmand and Chinese-inspired fragrances.',
+    description: 'A fog-soft house of gourmand and Chinese-inspired perfumes—intimate, modern, a little surreal.',
     type: 'website',
   },
 }
