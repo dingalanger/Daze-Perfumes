@@ -20,8 +20,8 @@ export default function PortalOverlay({ onEntered }: PortalOverlayProps) {
       const delta = now - prev
       prev = now
       setProgress((p) => {
-        const dir = holding ? 1 : -1
-        const step = (delta / requiredMs) * 100 * dir
+        // Auto progress like a loading animation (no hold required)
+        const step = (delta / requiredMs) * 100
         const next = Math.max(0, Math.min(100, p + step))
         return next
       })
@@ -30,7 +30,7 @@ export default function PortalOverlay({ onEntered }: PortalOverlayProps) {
 
     rafRef.current = requestAnimationFrame(tick)
     return () => { if (rafRef.current) cancelAnimationFrame(rafRef.current) }
-  }, [holding])
+  }, [])
 
   useEffect(() => {
     if (progress >= 100) {

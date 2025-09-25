@@ -9,8 +9,12 @@ export default function ClientShell({ children }: { children: React.ReactNode })
 
   useEffect(() => {
     setMounted(true)
-    // Always show on each visit
-    setShowPortal(true)
+    try {
+      const sessionSeen = sessionStorage.getItem('portal_seen_session') === 'true'
+      if (!sessionSeen) setShowPortal(true)
+    } catch {
+      setShowPortal(true)
+    }
   }, [])
 
   if (!mounted) return null
@@ -18,7 +22,7 @@ export default function ClientShell({ children }: { children: React.ReactNode })
   return (
     <>
       {showPortal && (
-        <PortalOverlay onEntered={() => setShowPortal(false)} />
+        <PortalOverlay onEntered={() => { try { sessionStorage.setItem('portal_seen_session', 'true') } catch {}; setShowPortal(false) }} />
       )}
       {children}
     </>
