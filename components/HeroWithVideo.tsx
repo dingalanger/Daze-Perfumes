@@ -47,11 +47,15 @@ export default function HeroWithVideo() {
             <h1 className="text-5xl md:text-7xl font-serif font-bold tracking-wide text-white mb-4">DAZE</h1>
           </div>
 
-          <p className="text-xl md:text-2xl text-white/85 mb-6 max-w-3xl mx-auto leading-relaxed animate-slide-up">
+          <p className="text-xl md:text-2xl text-white/85 mb-3 max-w-3xl mx-auto leading-relaxed animate-slide-up">
             Join our waitlist to get early access, secret drops, and invites.
           </p>
+          <p className="text-white/80 mb-8 animate-slide-up">
+            welcome,{' '}
+            <Link href="/sleepwalker-secret" className="underline decoration-dotted underline-offset-4 hover:text-white">sleepwalker</Link>
+          </p>
           <div className="animate-slide-up mb-8">
-            <Link href="/waitlist" className="btn-primary w-[240px] text-center inline-block">Join the Waitlist</Link>
+            <Link href="/waitlist" className="inline-block px-6 py-3 bg-vi-fog-lavender hover:bg-vi-muted-jade text-black rounded-none transition-colors">Join the Waitlist</Link>
           </div>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 animate-slide-up-delayed">

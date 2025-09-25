@@ -121,7 +121,7 @@ export default function PortalOverlay({ onEntered }: PortalOverlayProps) {
               onMouseEnter={() => setIsHovering(true)}
               onMouseOut={() => setIsHovering(false)}
               aria-label="Hold to enter"
-              className="group relative w-28 h-28 rounded-full grid place-items-center border border-white/20 bg-black/30 transition-[background,box-shadow] duration-200 hover:bg-black/20 hover:shadow-[0_0_0_10px_rgba(147,197,253,0.18),0_0_80px_rgba(147,197,253,0.35)]"
+              className="group relative w-28 h-28 rounded-full grid place-items-center border border-white/20 bg-black/30 transition-[background,box-shadow] duration-200 hover:bg-black/20 hover:shadow-[0_0_0_10px_rgba(201,195,230,0.18),0_0_80px_rgba(186,201,233,0.35)]"
             >
               <svg className="absolute inset-0" viewBox="0 0 100 100" style={{ filter: (isHovering || holding) ? 'drop-shadow(0 0 14px rgba(147,197,253,0.45))' : undefined }}>
                 <circle cx="50" cy="50" r={ringRadius} stroke="rgba(255,255,255,0.15)" strokeWidth="2" fill="none" />
@@ -144,8 +144,8 @@ export default function PortalOverlay({ onEntered }: PortalOverlayProps) {
                     <stop offset="100%" stopColor="#ffffff" stopOpacity="0.45" />
                   </linearGradient>
                   <linearGradient id="gradActive" x1="0" y1="0" x2="1" y2="1">
-                    <stop offset="0%" stopColor="#9bc5ff" stopOpacity="0.95" />
-                    <stop offset="100%" stopColor="#7aaaff" stopOpacity="0.85" />
+                    <stop offset="0%" stopColor="#C9C3E6" stopOpacity="0.95" />
+                    <stop offset="100%" stopColor="#BAC9E9" stopOpacity="0.85" />
                   </linearGradient>
                 </defs>
               </svg>
