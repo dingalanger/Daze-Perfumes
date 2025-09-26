@@ -37,7 +37,7 @@ export default function HeroWithVideo() {
           autoPlay
           muted
           loop
-          className="w-full h-full object-cover"
+          className="w-full h-full object-cover will-change-transform"
         />
         <div className="absolute inset-0 bg-black/65"></div>
       </div>

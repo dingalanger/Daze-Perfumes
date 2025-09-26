@@ -10,7 +10,7 @@ export default function PortalOverlay({ onEntered }: PortalOverlayProps) {
   const [fadeOut, setFadeOut] = useState(false)
 
   useEffect(() => {
-    const requiredMs = 1400
+    const requiredMs = 1200
     let prev = performance.now()
 
     const tick = () => {
