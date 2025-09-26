@@ -17,12 +17,19 @@ export default function ClientShell({ children }: { children: React.ReactNode })
     }
   }, [])
 
+  // Toggle a root class so hero content can stay hidden until overlay is gone
+  useEffect(() => {
+    const root = document.documentElement
+    if (showPortal) root.classList.add('portal-active')
+    else root.classList.remove('portal-active')
+  }, [showPortal])
+
   if (!mounted) return null
 
   return (
     <>
       {showPortal && (
-        <PortalOverlay onEntered={() => { try { sessionStorage.setItem('portal_seen_session', 'true') } catch {}; setShowPortal(false) }} />
+        <PortalOverlay onEntered={() => { try { sessionStorage.setItem('portal_seen_session', 'true') } catch {}; document.documentElement.classList.remove('portal-active'); setShowPortal(false) }} />
       )}
       {/* Remount the app once the overlay clears so home animations begin exactly then */}
       <div key={showPortal ? 'portal' : 'main'}>

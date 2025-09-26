@@ -48,10 +48,11 @@ export default function HeroWithVideo() {
             <h1 className="text-5xl md:text-7xl font-serif font-bold tracking-wide text-white mb-4">DAZE</h1>
           </div>
 
-          <p className="text-2xl md:text-3xl text-white/90 mb-8 animate-slide-up">
+          {/* Hidden initially; reveal via CSS when overlay unmounts by targeting :not(.portal-active) */}
+          <p className="hero-reveal text-2xl md:text-3xl text-white/90 mb-8 opacity-0 translate-y-4">
             Welcome, <Link href="/sleepwalker-secret" className="transition-all hover:text-white hover:[text-shadow:0_0_10px_rgba(255,255,255,0.6)] focus:[text-shadow:0_0_10px_rgba(255,255,255,0.6)]">sleepwalker</Link>
           </p>
-          <div className="animate-slide-up mb-10">
+          <div className="hero-reveal mb-10 opacity-0 translate-y-4">
             <div className="group relative inline-block">
               <span className="pointer-events-none absolute -inset-1 rounded-full bg-white/10 blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
               <Link href="/waitlist" className="relative inline-flex items-center justify-center w-[260px] sm:w-[300px] px-8 py-4 text-lg font-semibold rounded-full bg-white text-black border border-white/40 shadow-[0_0_0_1px_rgba(255,255,255,0.2)] hover:shadow-[0_0_24px_rgba(255,255,255,0.25)] transition-all duration-300 hover:scale-[1.02]">
@@ -61,7 +62,7 @@ export default function HeroWithVideo() {
             </div>
           </div>
 
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 animate-slide-up-delayed">
+          <div className="hero-reveal flex flex-col sm:flex-row items-center justify-center gap-4 opacity-0 translate-y-4">
             <Link href="/collection" className="btn-outline-light w-[220px] text-center">Explore Collection</Link>
             <Link href="/about" className="btn-outline-light w-[220px] text-center">Our Story</Link>
           </div>

@@ -33,9 +33,9 @@ export default function PortalOverlay({ onEntered }: PortalOverlayProps) {
   useEffect(() => {
     if (progress >= 100) {
       try { localStorage.setItem('portal_entered', 'true') } catch {}
-      // brief crossfade to allow home to mount
+      // Crossfade, then hand off AFTER fade completes so home text appears post‑fog
       setFadeOut(true)
-      const id = setTimeout(() => onEntered(), 250)
+      const id = setTimeout(() => onEntered(), 520)
       return () => clearTimeout(id)
     }
   }, [progress, onEntered])
@@ -52,7 +52,7 @@ export default function PortalOverlay({ onEntered }: PortalOverlayProps) {
   const t = Math.max(0, Math.min(1, progress / 100))
 
   return (
-    <div className={`fixed inset-0 z-[1000] transition-opacity duration-300 ${fadeOut ? 'opacity-0' : 'opacity-100'}`} style={{ background: 'rgba(5,5,6,0.92)' }}>
+    <div className={`fixed inset-0 z-[1000] transition-opacity duration-500 ${fadeOut ? 'opacity-0' : 'opacity-100'}`} style={{ background: 'rgba(5,5,6,0.92)' }}>
       {/* Subtle background gradient */}
       <div className="absolute inset-0" style={{
         background: 'radial-gradient(1200px 800px at -10% -20%, rgba(255,255,255,0.06), transparent 60%), radial-gradient(1000px 700px at 110% 10%, rgba(255,255,255,0.05), transparent 60%), radial-gradient(800px 600px at 50% 120%, rgba(255,255,255,0.04), transparent 60%)'
