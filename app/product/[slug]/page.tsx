@@ -50,8 +50,13 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
         <div className="container-custom grid grid-cols-1 lg:grid-cols-2 gap-10">
           {/* Product image */}
           <div className="relative bg-neutral-900 border border-white/10 rounded-lg aspect-[4/5] overflow-hidden">
-            {product.image && (
-              <Image src={product.image} alt={product.name} fill className="object-cover" />
+            {(
+              <Image
+                src={product.slug === 'pear' ? '/images/Daze Mock1.png' : product.image}
+                alt={product.name}
+                fill
+                className="object-contain p-6"
+              />
             )}
           </div>
 
