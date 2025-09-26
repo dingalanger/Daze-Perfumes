@@ -24,7 +24,10 @@ export default function ClientShell({ children }: { children: React.ReactNode })
       {showPortal && (
         <PortalOverlay onEntered={() => { try { sessionStorage.setItem('portal_seen_session', 'true') } catch {}; setShowPortal(false) }} />
       )}
-      {children}
+      {/* Remount the app once the overlay clears so home animations begin exactly then */}
+      <div key={showPortal ? 'portal' : 'main'}>
+        {children}
+      </div>
     </>
   )
 }

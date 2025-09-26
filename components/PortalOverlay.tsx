@@ -5,14 +5,12 @@ import { useEffect, useRef, useState } from 'react'
 type PortalOverlayProps = { onEntered: () => void }
 
 export default function PortalOverlay({ onEntered }: PortalOverlayProps) {
-  const [holding, setHolding] = useState(false)
   const [progress, setProgress] = useState(0)
-  const [isHovering, setIsHovering] = useState(false)
-  const holdStartRef = useRef<number | null>(null)
   const rafRef = useRef<number | null>(null)
+  const [fadeOut, setFadeOut] = useState(false)
 
   useEffect(() => {
-    const requiredMs = 1500
+    const requiredMs = 1400
     let prev = performance.now()
 
     const tick = () => {
@@ -35,7 +33,10 @@ export default function PortalOverlay({ onEntered }: PortalOverlayProps) {
   useEffect(() => {
     if (progress >= 100) {
       try { localStorage.setItem('portal_entered', 'true') } catch {}
-      onEntered()
+      // brief crossfade to allow home to mount
+      setFadeOut(true)
+      const id = setTimeout(() => onEntered(), 250)
+      return () => clearTimeout(id)
     }
   }, [progress, onEntered])
 
@@ -47,58 +48,47 @@ export default function PortalOverlay({ onEntered }: PortalOverlayProps) {
     return () => { html.style.overflow = prev }
   }, [])
 
-  // Fog mask expands from center as user holds
-  const radiusPercent = `${Math.max(0, Math.min(100, progress))}%`
-  const ringRadius = 44
-  const circumference = 2 * Math.PI * ringRadius
-  const dash = circumference * (1 - progress / 100)
+  // Fog clears uniformly from the whole screen (no central circle)
   const t = Math.max(0, Math.min(1, progress / 100))
 
   return (
-    <div className="fixed inset-0 z-[1000]" style={{ background: 'rgba(5,5,6,0.92)' }}>
+    <div className={`fixed inset-0 z-[1000] transition-opacity duration-300 ${fadeOut ? 'opacity-0' : 'opacity-100'}`} style={{ background: 'rgba(5,5,6,0.92)' }}>
       {/* Subtle background gradient */}
       <div className="absolute inset-0" style={{
         background: 'radial-gradient(1200px 800px at -10% -20%, rgba(255,255,255,0.06), transparent 60%), radial-gradient(1000px 700px at 110% 10%, rgba(255,255,255,0.05), transparent 60%), radial-gradient(800px 600px at 50% 120%, rgba(255,255,255,0.04), transparent 60%)'
       }} />
 
-      {/* Parting fog mask layer */}
-      <div
-        className="absolute inset-0"
-        style={{
-          WebkitMaskImage: `radial-gradient(circle at 50% 50%, rgba(0,0,0,0) ${radiusPercent}, rgba(0,0,0,1) calc(${radiusPercent} + 1%))`,
-          maskImage: `radial-gradient(circle at 50% 50%, rgba(0,0,0,0) ${radiusPercent}, rgba(0,0,0,1) calc(${radiusPercent} + 1%))`,
-          background: 'rgba(0,0,0,0.85)'
-        }}
-      />
+      {/* Fog layer that dissipates globally */}
+      <div className="absolute inset-0" style={{ background: `rgba(0,0,0,${0.85 * (1 - t)})` }} />
 
-      {/* Central clouds that drift outward as you hold (more layers + bigger) */}
+      {/* Cloud layers drift and fade as fog clears */}
       <img
         src="/images/cloud-placeholder.svg"
         alt="Cloud left"
-        className="pointer-events-none select-none absolute w-[680px] opacity-10"
-        style={{ left: '50%', top: '48%', transform: `translate(-50%, -50%) translateX(${(-260 * t).toFixed(1)}px) scale(${(1 + t * 0.1).toFixed(3)})` }}
+        className="pointer-events-none select-none absolute w-[680px]"
+        style={{ left: '50%', top: '48%', opacity: 0.15 * (1 - t), transform: `translate(-50%, -50%) translateX(${(-260 * t).toFixed(1)}px) scale(${(1 + t * 0.08).toFixed(3)})` }}
         draggable={false}
       />
       <img
         src="/images/cloud-placeholder.svg"
         alt="Cloud right"
-        className="pointer-events-none select-none absolute w-[680px] opacity-10"
-        style={{ left: '50%', top: '52%', transform: `translate(-50%, -50%) translateX(${(260 * t).toFixed(1)}px) scale(${(1 + t * 0.1).toFixed(3)})` }}
+        className="pointer-events-none select-none absolute w-[680px]"
+        style={{ left: '50%', top: '52%', opacity: 0.15 * (1 - t), transform: `translate(-50%, -50%) translateX(${(260 * t).toFixed(1)}px) scale(${(1 + t * 0.08).toFixed(3)})` }}
         draggable={false}
       />
       {/* Additional layers for richness */}
       <img
         src="/images/cloud-placeholder.svg"
         alt="Cloud upper-left"
-        className="pointer-events-none select-none absolute w-[520px] opacity-10"
-        style={{ left: '50%', top: '40%', transform: `translate(-50%, -50%) translateX(${(-300 * t).toFixed(1)}px) scale(${(0.95 + t * 0.1).toFixed(3)})` }}
+        className="pointer-events-none select-none absolute w-[520px]"
+        style={{ left: '50%', top: '40%', opacity: 0.15 * (1 - t), transform: `translate(-50%, -50%) translateX(${(-300 * t).toFixed(1)}px) scale(${(0.96 + t * 0.06).toFixed(3)})` }}
         draggable={false}
       />
       <img
         src="/images/cloud-placeholder.svg"
         alt="Cloud lower-right"
-        className="pointer-events-none select-none absolute w-[520px] opacity-10"
-        style={{ left: '50%', top: '60%', transform: `translate(-50%, -50%) translateX(${(300 * t).toFixed(1)}px) scale(${(0.95 + t * 0.1).toFixed(3)})` }}
+        className="pointer-events-none select-none absolute w-[520px]"
+        style={{ left: '50%', top: '60%', opacity: 0.15 * (1 - t), transform: `translate(-50%, -50%) translateX(${(300 * t).toFixed(1)}px) scale(${(0.96 + t * 0.06).toFixed(3)})` }}
         draggable={false}
       />
       {/* Ambient floating blobs (theme-agnostic) */}
@@ -107,53 +97,9 @@ export default function PortalOverlay({ onEntered }: PortalOverlayProps) {
       <div className="absolute bottom-[-140px] left-1/4 w-[520px] h-[520px] rounded-full bg-white/6 blur-3xl animate-float-slow" />
 
       <div className="relative h-full flex items-center justify-center px-6 pointer-events-none">
-        <div className="text-center max-w-md">
+        <div className="text-center max-w-md" style={{ opacity: 1 - t }}>
           <h1 className="font-serif text-4xl md:text-5xl text-white">DAZE</h1>
-          <p className="mt-3 text-white/80">Hold on to slip into the daze.</p>
-
-          <div className="mt-10 inline-flex items-center justify-center pointer-events-auto">
-            <button
-              onMouseDown={() => setHolding(true)}
-              onMouseUp={() => setHolding(false)}
-              onMouseLeave={() => setHolding(false)}
-              onTouchStart={() => setHolding(true)}
-              onTouchEnd={() => setHolding(false)}
-              onMouseEnter={() => setIsHovering(true)}
-              onMouseOut={() => setIsHovering(false)}
-              aria-label="Hold to enter"
-              className="group relative w-28 h-28 rounded-full grid place-items-center border border-white/20 bg-black/30 transition-[background,box-shadow] duration-200 hover:bg-black/20 hover:shadow-[0_0_0_10px_rgba(201,195,230,0.18),0_0_80px_rgba(186,201,233,0.35)]"
-            >
-              <svg className="absolute inset-0" viewBox="0 0 100 100" style={{ filter: (isHovering || holding) ? 'drop-shadow(0 0 14px rgba(147,197,253,0.45))' : undefined }}>
-                <circle cx="50" cy="50" r={ringRadius} stroke="rgba(255,255,255,0.15)" strokeWidth="2" fill="none" />
-                <circle
-                  cx="50"
-                  cy="50"
-                  r={ringRadius}
-                  stroke={(isHovering || holding) ? 'url(#gradActive)' : 'url(#grad)'}
-                  strokeWidth="4"
-                  fill="none"
-                  strokeDasharray={circumference}
-                  strokeDashoffset={dash}
-                  strokeLinecap="round"
-                  style={{ transition: `${holding ? 'stroke-dashoffset 0.06s linear' : 'stroke-dashoffset 0.2s ease'}, stroke 0.2s ease` }}
-                  transform="rotate(-90 50 50)"
-                />
-                <defs>
-                  <linearGradient id="grad" x1="0" y1="0" x2="1" y2="1">
-                    <stop offset="0%" stopColor="#ffffff" stopOpacity="0.85" />
-                    <stop offset="100%" stopColor="#ffffff" stopOpacity="0.45" />
-                  </linearGradient>
-                  <linearGradient id="gradActive" x1="0" y1="0" x2="1" y2="1">
-                    <stop offset="0%" stopColor="#C9C3E6" stopOpacity="0.95" />
-                    <stop offset="100%" stopColor="#BAC9E9" stopOpacity="0.85" />
-                  </linearGradient>
-                </defs>
-              </svg>
-              <span className="text-xs uppercase tracking-widest text-white/85 transition-opacity group-hover:opacity-100">Hold to enter</span>
-            </button>
-          </div>
-
-          <p className="mt-6 text-xs text-white/60">not all dreams are dreams</p>
+          <p className="mt-3 text-white/80">Slip into the daze.</p>
         </div>
       </div>
     </div>
